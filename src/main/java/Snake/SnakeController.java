@@ -175,53 +175,6 @@ public class SnakeController {
         grid.requestFocus();
     }
 
-    
-    
-    
-    
-    public void handleWriteToFile() {
-        try (FileWriter filewriter = new FileWriter(file, true)) {
-            for (String string : stats_from_file) {
-                System.out.println("Skriver!");
-                filewriter.write(string + "\n");
-            }
-        }
-            // temporaryFile.createNewFile();
-            // try (Scanner scanner = new Scanner(this.file)) {
-            //     if (this.file.length() == 0) {
-            //         filewriter.write(snake.getPlayerName() + "," + highscore_controller + "\n");
-            //     }
-            //     else {
-            //         while (scanner.hasNextLine()) {
-            //             String nextline = scanner.nextLine();
-            //             if (nextline.contains(this.playername)) continue;
-            //             filewriter.write(nextline + "\n");
-            //             // System.out.println("Skrev " + nextline + " inn i " + temporaryFile);
-            //         }
-            //         filewriter.write(this.playername + "," + highscore_controller + "\n");
-                    
-            //     }
-                
-            // }
-        catch (IOException IOe) {
-            // System.out.println("Dette skjedde: " + IOe.getMessage());
-            System.out.println("WriteToFile: " + IOe);
-        }
-
-            
-    }
-        
-        // File fil2 = this.file;
-        
-        // fil2.delete();
-        // System.out.println("this.file deleted");
-        
-        
-        //Dette funker:
-        // try (FileWriter filewriter = new FileWriter(this.file, true)) {
-        //     filewriter.write(snake.getPlayerName() + "," + highscore_controller + "\n");
-        // }  
-
     private void UpdateScoreBoard() {
         boolean removeLine = false;
         String lineToBeRemoved = "";
@@ -246,7 +199,6 @@ public class SnakeController {
         scoreboard.getChildren().clear();
         scoreboard.getChildren().add(0,node);
 
-        System.out.println(stats_from_file);
         for (int i = 0; i < stats_from_file.size(); i++) {
             if (i > 9) {
                 break;
@@ -290,6 +242,19 @@ public class SnakeController {
             System.out.println("Readfromfile: " + e.toString());
             
         }
+    }
+
+    public void handleWriteToFile() {
+        try (FileWriter filewriter = new FileWriter(file, false)) {
+            for (String string : stats_from_file) {
+                System.out.println("Skriver!");
+                filewriter.write(string + "\n");
+            }
+        }
+        catch (IOException IOe) {
+            // System.out.println("Dette skjedde: " + IOe.getMessage());
+            System.out.println("WriteToFile: " + IOe);
+        }  
     }
 }
 
