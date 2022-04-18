@@ -10,8 +10,6 @@ import java.io.IOException;
 
 
 public class SnakeApp extends Application {
-
-    private SnakeController controller;
     
     @Override
     public void start(Stage primaryStage) throws IOException{
@@ -20,16 +18,16 @@ public class SnakeApp extends Application {
 
         // Load the FXML data into loader
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(SnakeApp.class.getResource("Snake3.fxml"));
-        this.controller = loader.getController();
+        loader.setLocation(SnakeApp.class.getResource("Snake4.fxml"));
         // Create a new scene from that FXML data
-        Scene root = new Scene(loader.load(), 1400, 1000);
-        
+        Scene root = new Scene(loader.load(), 1450, 800);
+        // SnakeGameLoop loop = new SnakeGameLoop();
         
         
         // Set the scene and display the stage
         primaryStage.setScene(root);
         primaryStage.show();
+        
     }
 
     public static void main(String[] args) {

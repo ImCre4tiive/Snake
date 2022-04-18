@@ -62,7 +62,7 @@ public class Snake {
         }
     }
 
-    public void generateAppleWithValidLocation() {
+    public void generateApple() {
         boolean loop = true;
         Apple apple = new Apple();
         while (loop == true) {

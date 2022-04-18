@@ -4,27 +4,27 @@ public class SnakeGameLoop implements Runnable {
     
     private Thread gameThread;
     private int FPS = 5;
-    private Snake snake;
-    private SnakeController controller;
+    // private Snake snake;
+    // private SnakeController controller = new SnakeController();
 
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
-        snake = new Snake();
-        controller = new SnakeController();
+        // snake = new Snake();
+        
     }
+
 
     @Override
     public void run() {
 
-        double drawInterval = 1000000000/FPS; //Oppdaterer hvert 0.01666 sekund
+        double drawInterval = 1000000000/FPS; 
         double nextDrawTime = System.nanoTime() + drawInterval;
 
-
+        
         while (gameThread != null) {
-
-            snake.move();
-            controller.draw_snake(snake);
+            // controller.print();
+            System.out.println("Potet");
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();

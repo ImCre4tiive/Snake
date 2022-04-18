@@ -7,11 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
-import javafx.application.Platform;
 //FXML
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -37,59 +36,154 @@ public class SnakeController {
     @FXML private Button okbutton;
     @FXML private GridPane scoreboard;
 
+    private SnakeGameLoop loop = new SnakeGameLoop();
     private Snake snake;
     private Apple apple;
     private int highscore_controller;
     private boolean stop_game = false;
-    private File file = new File("C:\\Users\\jmnb1\\Desktop\\Snake", "SnakeStats.txt");;
-    private int restartcount = 0;
-    private String playername;
+    private File file;
+    // private File file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
+    private boolean startup_approved = false;
+    private boolean first_startup = true;
+    private boolean existing_name = false;
+    private boolean valid_language = false;
+    private String playername;  
     private List<String> stats_from_file = new ArrayList<>();
-    
 
 
     @FXML
     public void initialize() {
+        CheckSystemLanguage();
+        // System.out.println(System.getProperty("user.language"));
         this.snake = new Snake();
-        if (restartcount == 0) {
+        // if (valid_language == false) {
+        //     if (ShowWindowsLanguageBox() == false) {
+        //         initialize();
+        //     }
+        //     else {
+        //         valid_language = true;
+        //     }
+        // }
+        
+        if (startup_approved == false) {
+            handleReadFromFile();
             if (ShowNameInputField() == false) {
+                first_startup = false;
                 initialize();
-                System.out.println("Restarter");
             }
             else {
-                restartcount += 1;
+                startup_approved = true;
+                start();
             }
         }
+        else {
+            start();
+        }
+    }
+
+    private void start() {
         snake.generate_snake();
-        snake.generateAppleWithValidLocation();
+        snake.generateApple();
         this.apple = snake.getApple();
         draw_snake(snake);
         draw_apple(apple);
         show_stats();
-        handleReadFromFile();
         UpdateScoreBoard();
+    }
+
+    // @FXML
+    // private boolean ShowWindowsLanguageBox() {
+    //     TextInputDialog popup = new TextInputDialog();
+    //     popup.setTitle("Registrering av Windows-versjon");
+    //     popup.setHeaderText("For å lagre statistikk fra spillet på riktig sted må du oppgi om du har Windows på 'norsk' eller 'engelsk'");
+    //     popup.setContentText("Vennligst oppgi Windows-språk:");
+    //     String input = popup.showAndWait().get();
+    //     if (input.toLowerCase().equals("norsk")) {
+    //         file = new File(System.getProperty("user.home") + "/Skrivebord", "SnakeStats.txt");
+    //         return true;
+    //     }
+    //     else if (input.toLowerCase().equals("engelsk")) {
+    //         file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
+    //         return true;
+    //     }
+    //     else {
+    //         return false;
+    //     }
+
+    // }
+
+    private void CheckSystemLanguage() {
+        String language = System.getProperty("user.language");
+        if (language.equals("en")) {
+            file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
+        }
+        else if (language.equals("no")) {
+            file = new File(System.getProperty("user.home") + "/Skrivebord", "SnakeStats.txt");
+        }
+        else {
+            DisplayErrorCode("Operativsystemets språk støttes ikke. Velg norsk eller engelsk for å spille.");
+        }
+        System.out.println("This.file er nå: " + file);
+    }
+
+    private void DisplayErrorCode(String errormessage) {
+        Text text = new Text(500, 500, errormessage);
+        text.setVisible(value);
     }
 
     @FXML 
     private boolean ShowNameInputField() {
         TextInputDialog popup = new TextInputDialog();
-        popup.setContentText("Vennligst skriv inn navnet ditt: ");
-        Optional<String> input = popup.showAndWait();
-        String stringinput = input.get();
+        if (first_startup == true) {
+            popup.setTitle("Registrering");
+            popup.setHeaderText("Registrering av navn");
+            popup.setContentText("Skriv inn navnet ditt: ");
+        }
+        else if (existing_name == true && first_startup == false) {
+            popup.setTitle("Registrering");
+            popup.setHeaderText("Registrering av navn");
+            popup.setContentText("Det navnet finnes allerede i statistikken, skriv inn et ekstra kjennemerke: ");
+            existing_name = false;
+        }
+        else {
+            popup.setTitle("Registrering");
+            popup.setHeaderText("Registrering av navn");
+            popup.setContentText("Ugyldig navn, prøv på nytt: ");
+        }
+        
+        String input = popup.showAndWait().get();
 
-        if (ValidNameInput(stringinput) == true) {
-            snake.setPlayerName(stringinput);
-            this.playername = stringinput;
-            System.out.println(stringinput);
+        if (ValidNameInput(input) == true && TestExistingName(input) == false) {
+            snake.setPlayerName(input);
+            this.playername = input;
             popup.close();
             return true;
         }
-        else {return false;}
-        
+        else if (ValidNameInput(input) == false && TestExistingName(input) == true) {
+            existing_name = true;
+            return false;
+        }
+        else if (ValidNameInput(input) == true && TestExistingName(input) == true) {
+            existing_name = true;
+            return false;
+        }
+        else {
+            existing_name = false;
+            return false;
+        }
+    }
+
+    private boolean TestExistingName(String name) {
+        for (String string : stats_from_file) {
+            if (string.contains(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean ValidNameInput(String name) {
-        return name.matches("[a-zA-Z]+");
+        return name.matches("^([a-zA-Z]+\s)*[a-zA-Z]+$");
     }
 
     @FXML
@@ -102,6 +196,7 @@ public class SnakeController {
         for (BodyPart bodypart : snake.getSnake_body()) {
             Pane pane = new Pane();
             pane.setStyle("-fx-background-color: green;");
+
             grid.add(pane, bodypart.getX_Coordinate(), bodypart.getY_Coordinate());
         }
     }
@@ -111,6 +206,7 @@ public class SnakeController {
         Pane pane = new Pane();
         pane.setStyle("-fx-background-color: red;");
         grid.add(pane, apple.getX_Coordinate(), apple.getY_Coordinate());
+        
     }
 
     public void updateHighScore() {
@@ -175,6 +271,21 @@ public class SnakeController {
         grid.requestFocus();
     }
 
+    
+    public void handleWriteToFile() {
+        try (FileWriter filewriter = new FileWriter(file, false)) {
+            for (String string : stats_from_file) {
+                System.out.println("Skriver!");
+                filewriter.write(string + "\n");
+            }
+        }
+
+        catch (IOException IOe) {
+            // System.out.println("Dette skjedde: " + IOe.getMessage());
+            System.out.println("WriteToFile: " + IOe);
+        }     
+    }
+
     private void UpdateScoreBoard() {
         boolean removeLine = false;
         String lineToBeRemoved = "";
@@ -199,6 +310,7 @@ public class SnakeController {
         scoreboard.getChildren().clear();
         scoreboard.getChildren().add(0,node);
 
+        System.out.println(stats_from_file);
         for (int i = 0; i < stats_from_file.size(); i++) {
             if (i > 9) {
                 break;
@@ -223,7 +335,7 @@ public class SnakeController {
                 
                 try {
                     String[] line = nextline.split(",");
-                    if (line.length != 2 || !(line[0] instanceof String) || !(Integer.valueOf(line[1]) instanceof Integer)) {
+                    if (line.length != 2 || !(line[0] instanceof String) || !(Integer.valueOf(line[1]) instanceof Integer) || TestExistingName(line[0])) {
                         throw new Exception();
                     }
                     
@@ -233,7 +345,9 @@ public class SnakeController {
                 }
                 stats_from_file.add(nextline);
             }
-            stats_from_file.add(playername + "," + highscore_controller);
+            if (playername != null) {
+                stats_from_file.add(playername + "," + highscore_controller);
+            }
 
             Collections.sort(stats_from_file, new ScoreboardComparator());
         }
@@ -242,19 +356,6 @@ public class SnakeController {
             System.out.println("Readfromfile: " + e.toString());
             
         }
-    }
-
-    public void handleWriteToFile() {
-        try (FileWriter filewriter = new FileWriter(file, false)) {
-            for (String string : stats_from_file) {
-                System.out.println("Skriver!");
-                filewriter.write(string + "\n");
-            }
-        }
-        catch (IOException IOe) {
-            // System.out.println("Dette skjedde: " + IOe.getMessage());
-            System.out.println("WriteToFile: " + IOe);
-        }  
     }
 }
 
