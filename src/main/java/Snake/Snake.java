@@ -190,19 +190,15 @@ public class Snake {
         switch(event.getCode()) {
             case W:
                 changeDirectonOfHead("UP");
-                move();
                 break;
             case S:
                 changeDirectonOfHead("DOWN");
-                move();
                 break;
             case A:
                 changeDirectonOfHead("LEFT");
-                move();
                 break;
             case D:
                 changeDirectonOfHead("RIGHT");
-                move();
             default:
                 break;
         }

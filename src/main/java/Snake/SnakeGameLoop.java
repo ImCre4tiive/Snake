@@ -3,9 +3,14 @@ package Snake;
 public class SnakeGameLoop implements Runnable {
     
     private Thread gameThread;
-    private int FPS = 5;
+    private int FPS = 1;
+    private boolean first_startup = true;
     // private Snake snake;
-    // private SnakeController controller = new SnakeController();
+    private SnakeController controller;
+
+    public SnakeGameLoop(SnakeController controller) {
+        this.controller = controller;
+    }
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -14,17 +19,15 @@ public class SnakeGameLoop implements Runnable {
         
     }
 
-
     @Override
     public void run() {
-
         double drawInterval = 1000000000/FPS; 
         double nextDrawTime = System.nanoTime() + drawInterval;
 
         
         while (gameThread != null) {
-            // controller.print();
-            System.out.println("Potet");
+            
+            update();
 
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
@@ -42,5 +45,16 @@ public class SnakeGameLoop implements Runnable {
             }
         }
         
+    }
+
+    public void update() {
+        if (first_startup == true) {
+            controller.start();
+            first_startup = false;
+        }
+        else {
+            controller.getSnake().move();
+            controller.draw_snake(controller.getSnake());
+        }
     }
 }

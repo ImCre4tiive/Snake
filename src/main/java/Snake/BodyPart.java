@@ -23,8 +23,6 @@ public class BodyPart {
             throw new IllegalArgumentException("Her ble det noe feil i input. Den var: X=" + X_Coordinate + " ,Y=" + Y_Coordinate + " , ishead=" + ishead + " , direction= " + direction);
         }
     }
-
-
     
     public int getX_Coordinate() {
         return X_Coordinate;
@@ -34,7 +32,6 @@ public class BodyPart {
         X_Coordinate = x_Coordinate;
     }
 
-
     public int getY_Coordinate() {
         return Y_Coordinate;
     }
@@ -43,7 +40,6 @@ public class BodyPart {
         Y_Coordinate = y_Coordinate;
     }
 
-
     public boolean isIshead() {
         return ishead;
     }
@@ -51,7 +47,6 @@ public class BodyPart {
     public void setIshead(boolean ishead) {
         this.ishead = ishead;
     }
-
 
     public String getDirection() {
         return direction;
