@@ -68,7 +68,7 @@ public class Snake {
         while (loop == true) {
             for (BodyPart bodypart : snake_body) {
                 if (apple.getX_Coordinate() == bodypart.getX_Coordinate() && apple.getY_Coordinate() == bodypart.getY_Coordinate()) {
-                    apple = new Apple();
+                    this.apple = new Apple();
                 }
                 else {
                     this.apple = apple;
@@ -78,7 +78,6 @@ public class Snake {
         }
         
     }
-
 
     public void IncreaseLengthOfSnake() {
         BodyPart tail = snake_body.get(snake_body.size()-1);

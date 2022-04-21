@@ -4,9 +4,11 @@ package Snake;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,11 +38,8 @@ public class SnakeController {
     @FXML private Label score;
     @FXML private Label length;
     @FXML private Label errortext;
-    @FXML private TextField namefield;
-    @FXML private Button okbutton;
     @FXML private GridPane scoreboard;
 
-    private SnakeGameLoop loop = new SnakeGameLoop(this);
     private Snake snake;
     private Apple apple;
     private int highscore_controller;
@@ -56,18 +55,21 @@ public class SnakeController {
     private int counter = 0;
     private List<Pane> bodypanes = new ArrayList<>();
     private int loopdelay = 75;
-    private TimerTask task;
+    private FileHandler filehandler = new FileHandler();
     
-
+    
 
     @FXML
     public void initialize() {
-        
+        System.out.println(FileHandler.class.getResource("SnakeStats/").getFile() + "Stats.txt");
         errortext.setVisible(false);
-        CheckSystemLanguage();
+        if (first_startup == true) {
+            CheckSystemLanguage();
+        }
         this.snake = new Snake();
         if (startup_approved == false) {
-            handleReadFromFile();
+            filehandler.ReadFromFile(file, stats_from_file, playername, highscore_controller);
+            // handleReadFromFile();
             if (ShowNameInputField() == false) {
                 first_startup = false;
                 initialize();
@@ -104,7 +106,7 @@ public class SnakeController {
 
     public void start_loop() {
         Timer timer = new Timer();
-        task = new TimerTask() {
+        TimerTask task = new TimerTask() {
 
             @Override
             public void run() {
@@ -116,26 +118,28 @@ public class SnakeController {
                             draw_snake(snake);
                             draw_apple(apple);
                             if (snake.IsAppleEaten() == true) {
-                                snake.setApple(new Apple());
+                                snake.generateApple();
                                 apple = snake.getApple();
                                 draw_apple(apple);
                                 snake.IncreaseLengthOfSnake();
                                 snake.IncreaseScore();
                                 show_stats();
                                 UpdateScoreBoard();
-                                handleWriteToFile();
-                                counter += 1;
-                                loopdelay -= 2;
-                                // if ((counter % 2) == 0) {
-                                //     loopdelay -= 2;
-                                //     System.out.println("Nå går det fortere her!");
-                                //     // timer.cancel();
-                                //     timer.scheduleAtFixedRate(task, 0, loopdelay);
-                                // }
+                                // handleWriteToFile();
+                                filehandler.WriteToFile(file, stats_from_file);
+                                if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
+                                    loopdelay -= 4;
+                                    System.out.println("Nå er loopdelay = " + loopdelay + " ms");
+                                    timer.cancel();
+                                    start_loop();
+                                }
                             }
                             if (snake.CheckCollision() == true) {
                                 initialize();
                                 snake.increaseRestartCount();
+                                loopdelay = 80;
+                                timer.cancel();
+                                start_loop();
                             }
                             
                             
@@ -143,6 +147,10 @@ public class SnakeController {
                         } catch (IllegalArgumentException e) {
                             initialize();
                             snake.increaseRestartCount();
+                            loopdelay = 80;
+                            timer.cancel();
+                            start_loop();
+                            
                         }
                     }
                 });
@@ -155,15 +163,19 @@ public class SnakeController {
     private void CheckSystemLanguage() {
         String language = System.getProperty("user.language");
         if (language.equals("en")) {
+            System.out.println("Språk = " + language);
             file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
         }
         else if (language.equals("no")) {
+            System.out.println("Språk = " + language);
             file = new File(System.getProperty("user.home") + "/Skrivebord", "SnakeStats.txt");
         }
         else {
             DisplayErrorCode("Operativsystemets språk støttes ikke. Velg norsk eller engelsk for å spille.");
         }
     }
+
+
 
     private void DisplayErrorCode(String errormessage) {
         errortext.setText(errormessage);
@@ -212,14 +224,7 @@ public class SnakeController {
         }
     }
 
-    private boolean TestExistingName(String name) {
-        for (String string : stats_from_file) {
-            if (string.contains(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
 
     private boolean ValidNameInput(String name) {
         return name.matches("^([a-åA-Å]+\s)*[a-åA-Å]+$");
@@ -304,27 +309,20 @@ public class SnakeController {
 
     }
 
-    @FXML
-    public void handleNameInput(ActionEvent event) {
-        snake.setPlayerName(namefield.getText());
-        handleWriteToFile();
-        handleReadFromFile();
-        grid.requestFocus();
-    }
 
     
-    public void handleWriteToFile() {
-        try (FileWriter filewriter = new FileWriter(file, false)) {
-            for (String string : stats_from_file) {
-                filewriter.write(string + "\n");
-            }
-        }
+    // public void handleWriteToFile() {
+    //     try (FileWriter filewriter = new FileWriter(file, false)) {
+    //         for (String string : stats_from_file) {
+    //             filewriter.write(string + "\n");
+    //         }
+    //     }
 
-        catch (IOException IOe) {
-            // System.out.println("Dette skjedde: " + IOe.getMessage());
-            System.out.println("WriteToFile: " + IOe);
-        }     
-    }
+    //     catch (IOException IOe) {
+    //         System.out.println("WriteToFile: " + IOe);
+    //     }     
+    // }
+
 
     private void UpdateScoreBoard() {
         boolean removeLine = false;
@@ -365,37 +363,47 @@ public class SnakeController {
         }
     }
 
-    public void handleReadFromFile() {
-
-        try (Scanner scanner = new Scanner(this.file)) {
-            
-            while (scanner.hasNextLine()) {
-                String nextline = scanner.nextLine();
-                
-                try {
-                    String[] line = nextline.split(",");
-                    if (line.length != 2 || !(line[0] instanceof String) || !(Integer.valueOf(line[1]) instanceof Integer) || TestExistingName(line[0])) {
-                        throw new Exception();
-                    }
-                    
-                } catch (Exception e) {
-                    System.out.println(e);
-                    continue;
-                }
-                stats_from_file.add(nextline);
+    private boolean TestExistingName(String name) {
+        for (String string : stats_from_file) {
+            if (string.contains(name)) {
+                return true;
             }
-            if (playername != null) {
-                stats_from_file.add(playername + "," + highscore_controller);
-            }
-
-            Collections.sort(stats_from_file, new ScoreboardComparator());
         }
-        catch (IOException e) {
-            // System.out.println("Dette skjedde: " + e.getMessage());
-            System.out.println("Readfromfile: " + e.toString());
-            
-        }
+        return false;
     }
+
+    // public void handleReadFromFile() {
+
+    //     try (Scanner scanner = new Scanner(this.file)) {
+    //         System.out.println("This.file er nå: " + this.file);
+            
+    //         while (scanner.hasNextLine()) {
+    //             String nextline = scanner.nextLine();
+                
+    //             try {
+    //                 String[] line = nextline.split(",");
+    //                 if (line.length != 2 || !(line[0] instanceof String) || !(Integer.valueOf(line[1]) instanceof Integer) || TestExistingName(line[0])) {
+    //                     throw new Exception();
+    //                 }
+                    
+    //             } catch (Exception e) {
+    //                 System.out.println(e);
+    //                 continue;
+    //             }
+    //             stats_from_file.add(nextline);
+    //         }
+    //         if (playername != null) {
+    //             stats_from_file.add(playername + "," + highscore_controller);
+    //         }
+
+    //         Collections.sort(stats_from_file, new ScoreboardComparator());
+    //     }
+    //     catch (IOException e) {
+    //         // System.out.println("Dette skjedde: " + e.getMessage());
+    //         System.out.println("Readfromfile: " + e.toString());
+            
+    //     }
+    // }
 }
 
 
