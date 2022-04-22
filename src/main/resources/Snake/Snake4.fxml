@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -9,7 +10,7 @@
 
 <AnchorPane prefHeight="957.0" prefWidth="1388.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Snake.SnakeController">
   <children>
-      <GridPane fx:id="grid" focusTraversable="true" gridLinesVisible="true" layoutX="0.5" layoutY="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPress" prefHeight="800" prefWidth="1080.0" style="-fx-background-color: gray;">
+      <GridPane fx:id="grid" focusTraversable="true" gridLinesVisible="true" layoutX="0.5" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPress" prefHeight="800" prefWidth="1080.0" style="-fx-background-color: gray;">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
@@ -154,10 +155,40 @@
             <Font name="Copperplate Gothic Bold" size="30.0" />
          </font>
       </Label>
-      <Label fx:id="errortext" layoutX="300.0" layoutY="330.0" prefHeight="78.0" prefWidth="754.0" text="Label" textAlignment="CENTER" textFill="RED">
+      <Label fx:id="errortext" layoutX="14.0" layoutY="840.0" prefHeight="78.0" prefWidth="754.0" text="Label" textAlignment="CENTER" textFill="RED">
          <font>
             <Font name="Copperplate Gothic Bold" size="40.0" />
          </font>
       </Label>
+      <Label fx:id="gameover" layoutX="370.0" layoutY="320.0" prefHeight="78.0" prefWidth="371.0" text="GAME OVER" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="50.0" />
+         </font>
+      </Label>
+      <Button fx:id="playagain" layoutX="390.0" layoutY="400.0" mnemonicParsing="false" onAction="#handlePlayAgainClick" prefHeight="36.0" prefWidth="150.0" text="PLAY AGAIN">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="quitgame" layoutX="550.0" layoutY="400.0" mnemonicParsing="false" onAction="#handleQuitGameClick" prefHeight="36.0" prefWidth="150.0" text="QUIT GAME">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="pausegame" layoutX="960.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePauseClick" prefHeight="36.0" prefWidth="120.0" text="pause game">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="15.0" />
+         </font>
+      </Button>
+      <Label fx:id="gamepaused" layoutX="330.0" layoutY="320.0" prefHeight="78.0" prefWidth="420.0" text="GAME PAUSED" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="50.0" />
+         </font>
+      </Label>
+      <Button fx:id="resume" layoutX="470.0" layoutY="400.0" mnemonicParsing="false" onAction="#handleResumeClick" prefHeight="36.0" prefWidth="150.0" text="resume">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="15.0" />
+         </font>
+      </Button>
   </children>
 </AnchorPane>

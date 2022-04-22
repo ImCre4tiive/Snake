@@ -21,7 +21,7 @@ public class SnakeApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(SnakeApp.class.getResource("Snake4.fxml"));
         // Create a new scene from that FXML data
-        Scene root = new Scene(loader.load(), 1450, 800);
+        Scene root = new Scene(loader.load(), 1450, 1000);
         // SnakeGameLoop loop = new SnakeGameLoop();
         
         

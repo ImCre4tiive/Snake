@@ -38,12 +38,20 @@ public class SnakeController {
     @FXML private Label score;
     @FXML private Label length;
     @FXML private Label errortext;
+    @FXML private Label gameover;
+    @FXML private Label gamepaused;
     @FXML private GridPane scoreboard;
+    @FXML private Button playagain;
+    @FXML private Button quitgame;
+    @FXML private Button pausegame;
+    @FXML private Button resume;
+    
 
     private Snake snake;
     private Apple apple;
     private int highscore_controller;
     private boolean GameStopped = false;
+    private boolean GamePaused = false;
     private File file;
     // private File file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
     private boolean startup_approved = false;
@@ -61,8 +69,8 @@ public class SnakeController {
 
     @FXML
     public void initialize() {
-        System.out.println(FileHandler.class.getResource("SnakeStats/").getFile() + "Stats.txt");
-        errortext.setVisible(false);
+        // System.out.println(FileHandler.class.getResource("SnakeStats/").getFile() + "Stats.txt");
+        HideOverlayElements();
         if (first_startup == true) {
             CheckSystemLanguage();
         }
@@ -78,10 +86,6 @@ public class SnakeController {
                 startup_approved = true;
                 start();
                 start_loop();
-                Pane pane = new Pane();
-                pane.setStyle("-fx-background-color: green;");
-                grid.add(pane, 10, 10);
-                // pane.relocate(10, 10);
             }
         }
         else {
@@ -100,6 +104,57 @@ public class SnakeController {
         UpdateScoreBoard();
     }
 
+    @FXML
+    private void HideOverlayElements() {
+        errortext.setVisible(false);
+        gameover.setVisible(false);
+        playagain.setVisible(false);
+        quitgame.setVisible(false);
+        gamepaused.setVisible(false);
+        resume.setVisible(false);
+    }
+
+    @FXML
+    public void ShowGameOverMenu() {
+        gameover.setVisible(true);
+        playagain.setVisible(true);
+        quitgame.setVisible(true);
+    }
+
+    @FXML
+    public void ShowPauseMenu() {
+        gamepaused.setVisible(true);
+        resume.setVisible(true);
+    }
+
+    @FXML
+    public void handlePlayAgainClick() {
+        initialize();
+        GameStopped = false;
+        grid.requestFocus();
+    }
+
+    @FXML
+    public void handleQuitGameClick() {
+        Platform.exit();
+    }
+
+    @FXML
+    public void handlePauseClick() {
+        GamePaused = true;
+        grid.requestFocus();
+    }
+
+    @FXML
+    public void handleResumeClick() {
+        GamePaused = false;
+        gamepaused.setVisible(false);
+        resume.setVisible(false);
+        start_loop();
+        grid.requestFocus();
+    }
+    
+
     public Snake getSnake() {
         return snake;
     }
@@ -115,38 +170,49 @@ public class SnakeController {
                 Platform.runLater(new Runnable() {
                     @Override public void run() {
                         try {
-                            draw_snake(snake);
-                            draw_apple(apple);
-                            if (snake.IsAppleEaten() == true) {
-                                snake.generateApple();
-                                apple = snake.getApple();
+                            if (GameStopped == false && GamePaused == false) {
+                                draw_snake(snake);
                                 draw_apple(apple);
-                                snake.IncreaseLengthOfSnake();
-                                snake.IncreaseScore();
-                                show_stats();
-                                UpdateScoreBoard();
-                                // handleWriteToFile();
-                                filehandler.WriteToFile(file, stats_from_file);
-                                if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
-                                    loopdelay -= 4;
-                                    System.out.println("Nå er loopdelay = " + loopdelay + " ms");
+                                if (snake.IsAppleEaten() == true) {
+                                    snake.generateApple();
+                                    apple = snake.getApple();
+                                    draw_apple(apple);
+                                    snake.IncreaseLengthOfSnake();
+                                    snake.IncreaseScore();
+                                    show_stats();
+                                    UpdateScoreBoard();
+                                    // handleWriteToFile();
+                                    filehandler.WriteToFile(file, stats_from_file);
+                                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
+                                        loopdelay -= 4;
+                                        // System.out.println("Nå er loopdelay = " + loopdelay + " ms");
+                                        timer.cancel();
+                                        start_loop();
+                                    }
+                                }
+                                if (snake.CheckCollision() == true) {
+                                    GameStopped = true;
+                                    initialize();
+                                    loopdelay = 80;
                                     timer.cancel();
                                     start_loop();
+                                    
                                 }
                             }
-                            if (snake.CheckCollision() == true) {
-                                initialize();
-                                snake.increaseRestartCount();
-                                loopdelay = 80;
+                            else if (GamePaused == true) {
+                                ShowPauseMenu();
                                 timer.cancel();
-                                start_loop();
+                                
+                            }
+                            
+                            else {
+                                ShowGameOverMenu();
                             }
                             
                             
                             
                         } catch (IllegalArgumentException e) {
                             initialize();
-                            snake.increaseRestartCount();
                             loopdelay = 80;
                             timer.cancel();
                             start_loop();
@@ -163,11 +229,11 @@ public class SnakeController {
     private void CheckSystemLanguage() {
         String language = System.getProperty("user.language");
         if (language.equals("en")) {
-            System.out.println("Språk = " + language);
+            // System.out.println("Språk = " + language);
             file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
         }
         else if (language.equals("no")) {
-            System.out.println("Språk = " + language);
+            // System.out.println("Språk = " + language);
             file = new File(System.getProperty("user.home") + "/Skrivebord", "SnakeStats.txt");
         }
         else {
@@ -224,10 +290,8 @@ public class SnakeController {
         }
     }
 
-    
-
     private boolean ValidNameInput(String name) {
-        return name.matches("^([a-åA-Å]+\s)*[a-åA-Å]+$");
+        return name.matches("^([a-zA-ZæøåÆØÅ]+\s)*[a-zA-ZæøåÆØÅ]+$");
     }
 
     @FXML
@@ -290,14 +354,14 @@ public class SnakeController {
 
             } catch (IllegalArgumentException e) {
                 initialize();
-                snake.increaseRestartCount();
+                
                 }
             }
             
         
         // else {
         //     initialize();
-        //     snake.increaseRestartCount();
+        //     
         //     GameStopped = false; 
         // }
 
@@ -305,9 +369,7 @@ public class SnakeController {
         // grid.requestFocus();
     }
 
-    public void ShowPauseMenu() {
-
-    }
+    
 
 
     
