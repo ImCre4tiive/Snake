@@ -108,13 +108,13 @@ public class Snake {
     }
 
     public boolean CheckCollision() {
-        //Koden under er for å sjekke kollisjon med enten grid-limit eller slangekropp 
+        //Koden under er for å sjekke kollisjon med enten grid-limit eller slangekropp
         List<String> check_body_duplicate = new ArrayList<>();
         Set<String> set_body = new HashSet<>(); 
         
         //Sjekker om slangen er utenfor grid-et
         for (BodyPart bodypart : snake_body) {
-            if (bodypart.getX_Coordinate() > 49 || bodypart.getX_Coordinate() < 0 || bodypart.getY_Coordinate() > 49 || bodypart.getY_Coordinate() < 0) {
+            if (bodypart.getX_Coordinate() > 50 || bodypart.getX_Coordinate() < 0 || bodypart.getY_Coordinate() > 50 || bodypart.getY_Coordinate() < 0) {
                 return true;
             }
             check_body_duplicate.add("(" + bodypart.getX_Coordinate() + "," + bodypart.getY_Coordinate() + ")");

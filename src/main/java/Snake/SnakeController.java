@@ -104,6 +104,75 @@ public class SnakeController {
         UpdateScoreBoard();
     }
 
+    public void start_loop() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                
+                snake.move();
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        try {
+                            if (GameStopped == false && GamePaused == false) {
+                                draw_snake(snake);
+                                draw_apple(apple);
+                                if (snake.IsAppleEaten() == true) {
+                                    snake.generateApple();
+                                    apple = snake.getApple();
+                                    draw_apple(apple);
+                                    snake.IncreaseLengthOfSnake();
+                                    snake.IncreaseScore();
+                                    show_stats();
+                                    UpdateScoreBoard();
+                                    // handleWriteToFile();
+                                    filehandler.WriteToFile(file, stats_from_file);
+                                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
+                                        loopdelay -= 4;
+                                        // System.out.println("Nå er loopdelay = " + loopdelay + " ms");
+                                        timer.cancel();
+                                        start_loop();
+                                    }
+                                }
+                                if (snake.CheckCollision() == true) {
+                                    GameStopped = true;
+                                    initialize();
+                                    loopdelay = 80;
+                                    timer.cancel();
+                                    start_loop();
+                                    
+                                }
+                            }
+                            else if (GamePaused == true) {
+                                ShowPauseMenu();
+                                timer.cancel();
+                                
+                            }
+                            
+                            else {
+                                ShowGameOverMenu();
+                            }
+                            
+                            
+                            
+                        } catch (IllegalArgumentException e) {
+                            GameStopped = true;
+                            initialize();
+                            loopdelay = 80;
+                            timer.cancel();
+                            start_loop();
+                            
+                        }
+                    }
+                });
+                }
+        };
+        timer.scheduleAtFixedRate(task, 0, loopdelay);
+    }
+
+//==============================================================================================================================================================================
+    //Menyer og overlay
     @FXML
     private void HideOverlayElements() {
         errortext.setVisible(false);
@@ -159,71 +228,7 @@ public class SnakeController {
         return snake;
     }
 
-    public void start_loop() {
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                
-                snake.move();
-                Platform.runLater(new Runnable() {
-                    @Override public void run() {
-                        try {
-                            if (GameStopped == false && GamePaused == false) {
-                                draw_snake(snake);
-                                draw_apple(apple);
-                                if (snake.IsAppleEaten() == true) {
-                                    snake.generateApple();
-                                    apple = snake.getApple();
-                                    draw_apple(apple);
-                                    snake.IncreaseLengthOfSnake();
-                                    snake.IncreaseScore();
-                                    show_stats();
-                                    UpdateScoreBoard();
-                                    // handleWriteToFile();
-                                    filehandler.WriteToFile(file, stats_from_file);
-                                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
-                                        loopdelay -= 4;
-                                        // System.out.println("Nå er loopdelay = " + loopdelay + " ms");
-                                        timer.cancel();
-                                        start_loop();
-                                    }
-                                }
-                                if (snake.CheckCollision() == true) {
-                                    GameStopped = true;
-                                    initialize();
-                                    loopdelay = 80;
-                                    timer.cancel();
-                                    start_loop();
-                                    
-                                }
-                            }
-                            else if (GamePaused == true) {
-                                ShowPauseMenu();
-                                timer.cancel();
-                                
-                            }
-                            
-                            else {
-                                ShowGameOverMenu();
-                            }
-                            
-                            
-                            
-                        } catch (IllegalArgumentException e) {
-                            initialize();
-                            loopdelay = 80;
-                            timer.cancel();
-                            start_loop();
-                            
-                        }
-                    }
-                });
-                }
-        };
-        timer.scheduleAtFixedRate(task, 0, loopdelay);
-    }
+    
 
 
     private void CheckSystemLanguage() {
