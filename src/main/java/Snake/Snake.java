@@ -62,6 +62,17 @@ public class Snake {
         }
     }
 
+    public void generate_test_snake() {
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                snake_body.add(new BodyPart(22, 25, true, "RIGHT"));
+            }
+            else {
+                snake_body.add(new BodyPart(22-i, 25, false, "RIGHT"));
+            }
+        }
+    }
+
     public void generateApple() {
         boolean loop = true;
         Apple apple = new Apple();
@@ -77,6 +88,16 @@ public class Snake {
             }
         }
         
+    }
+
+    public void generateTestApple(int X_Coordinate, int Y_Coordinate) {
+        this.apple = new Apple(X_Coordinate, Y_Coordinate);
+    }
+
+    public void changeToStringOfBodyParts(String toString) {
+        for (BodyPart bodypart : getSnake_body()) {
+            bodypart.setToString(toString);
+        }
     }
 
     public void IncreaseLengthOfSnake() {
@@ -113,12 +134,13 @@ public class Snake {
         Set<String> set_body = new HashSet<>(); 
         
         //Sjekker om slangen er utenfor grid-et
+        BodyPart head = getBodyPart(0);
+        if (head.getX_Coordinate() > 50 || head.getX_Coordinate() < 0 || head.getY_Coordinate() > 50 || head.getY_Coordinate() < 0) {
+            return true;
+        }
+
         for (BodyPart bodypart : snake_body) {
-            if (bodypart.getX_Coordinate() > 50 || bodypart.getX_Coordinate() < 0 || bodypart.getY_Coordinate() > 50 || bodypart.getY_Coordinate() < 0) {
-                return true;
-            }
             check_body_duplicate.add("(" + bodypart.getX_Coordinate() + "," + bodypart.getY_Coordinate() + ")");
-            
         }
         //Sjekker om slangen kolliderer med seg selv
         for (String string : check_body_duplicate) {
@@ -140,9 +162,9 @@ public class Snake {
         return this.snake_body.get(index);
     }
 
-    public void setSnake_body(List<BodyPart> new_list_of_body) {
-        this.snake_body = new_list_of_body;
-    }
+    // public void setSnake_body(List<BodyPart> new_list_of_body) {
+    //     this.snake_body = new_list_of_body;
+    // }
 
     public void changeDirectonOfHead(String direction) {
         if (this.direction_of_head.equals("UP")) {
