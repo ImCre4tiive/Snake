@@ -73,6 +73,17 @@ public class Snake {
         }
     }
 
+    public void generate_test_snake_at_border() {
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                snake_body.add(new BodyPart(48, 25, true, "RIGHT"));
+            }
+            else {
+                snake_body.add(new BodyPart(48-i, 25, false, "RIGHT"));
+            }
+        }
+    }
+
     public void generateApple() {
         boolean loop = true;
         Apple apple = new Apple();
@@ -135,7 +146,7 @@ public class Snake {
         
         //Sjekker om slangen er utenfor grid-et
         BodyPart head = getBodyPart(0);
-        if (head.getX_Coordinate() > 50 || head.getX_Coordinate() < 0 || head.getY_Coordinate() > 50 || head.getY_Coordinate() < 0) {
+        if (head.getX_Coordinate() > 49 || head.getX_Coordinate() < 0 || head.getY_Coordinate() > 49 || head.getY_Coordinate() < 0) {
             return true;
         }
 

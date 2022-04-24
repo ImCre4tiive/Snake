@@ -1,6 +1,7 @@
-package exampleproject;
+package Snake;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,6 +51,7 @@ public class SnakeTest {
 
         //Sjekker om hodet har ishead = true og at resten av kroppen ikke har det
         assertTrue(snake.getBodyPart(0).getIshead());
+        
         int counter = 0;
         for (BodyPart bodypart : snake.getSnake_body()) {
             if (bodypart.getIshead() != true) {
@@ -90,7 +92,44 @@ public class SnakeTest {
     }
 
     @Test
-    public void testCheckCollision() {
+    public void testIsAppleEaten() {
+        //Eplet er 2 "blokker" foran slangen - sjekker om det blir spist:
+        assertFalse(snake.IsAppleEaten());
+        snake.move();
+        snake.move();
+        assertTrue(snake.IsAppleEaten());
+    }
 
+    @Test
+    public void testCheckCollision() {
+        //Gjør slangen litt lengre for at den skal kunne krasje i seg selv, og tester dette: 
+        snake.IncreaseLengthOfSnake();
+        assertFalse(snake.CheckCollision());
+        snake.changeDirectonOfHead("UP");
+        snake.move();
+        snake.changeDirectonOfHead("LEFT");
+        snake.move();
+        snake.changeDirectonOfHead("DOWN");
+        snake.move();
+        assertTrue(snake.CheckCollision());
+
+        //
+        snake.getSnake_body().clear();
+        snake.generate_test_snake_at_border();
+        assertFalse(snake.CheckCollision());
+        snake.move();
+        snake.move();
+        //Hodet har nå X-koordinat = 50 og burde derfor være utenfor banen:
+        assertTrue(snake.CheckCollision());
+    }
+
+    @Test
+    public void testIncreaseLengthOfSnake() {
+        assertEquals(3, snake.getSnake_body().size());
+        snake.IncreaseLengthOfSnake();
+        assertEquals(5, snake.getSnake_body().size());
+        for (BodyPart bodypart : snake.getSnake_body()) {
+            assertTrue(bodypart.getDirection().equals("RIGHT"));
+        }
     }
 }
