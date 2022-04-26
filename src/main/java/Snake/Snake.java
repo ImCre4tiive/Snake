@@ -7,48 +7,12 @@ import java.util.Set;
 
 import javafx.scene.input.KeyEvent;
 
-
 public class Snake {
-    
     private String direction_of_head = "RIGHT";
     private List<BodyPart> snake_body = new ArrayList<>();
     private Apple apple = new Apple();
     private int score = 0;
     private String playername;
-    private int restartcount;
-
-    public int getRestartCount() {
-        return this.restartcount;
-    }
-    
-    public void increaseRestartCount() {
-        this.restartcount += 1;
-    }
-
-    public void setPlayerName(String playername) {
-        this.playername = playername;
-    }
-
-    public String getPlayerName() {
-        return this.playername;
-    }
-
-    public Apple getApple() {
-        return this.apple;
-    }
-
-    public void setApple(Apple apple) {
-        this.apple = apple;
-    }
-    
-    public void IncreaseScore() {
-        this.score += 1;
-    }
-
-
-    public int getScore() {
-        return this.score;
-    }
 
 
     public void generate_snake() {
@@ -62,52 +26,17 @@ public class Snake {
         }
     }
 
-    public void generate_test_snake() {
-        for (int i = 0; i < 3; i++) {
-            if (i == 0) {
-                snake_body.add(new BodyPart(22, 25, true, "RIGHT"));
-            }
-            else {
-                snake_body.add(new BodyPart(22-i, 25, false, "RIGHT"));
-            }
-        }
-    }
-
-    public void generate_test_snake_at_border() {
-        for (int i = 0; i < 3; i++) {
-            if (i == 0) {
-                snake_body.add(new BodyPart(48, 25, true, "RIGHT"));
-            }
-            else {
-                snake_body.add(new BodyPart(48-i, 25, false, "RIGHT"));
-            }
-        }
-    }
-
     public void generateApple() {
         boolean loop = true;
-        Apple apple = new Apple();
+        apple = new Apple();
         while (loop == true) {
             for (BodyPart bodypart : snake_body) {
                 if (apple.getX_Coordinate() == bodypart.getX_Coordinate() && apple.getY_Coordinate() == bodypart.getY_Coordinate()) {
-                    this.apple = new Apple();
+                    apple = new Apple();
+                    continue;
                 }
-                else {
-                    this.apple = apple;
-                    loop = false;
-                }
+            loop = false;
             }
-        }
-        
-    }
-
-    public void generateTestApple(int X_Coordinate, int Y_Coordinate) {
-        this.apple = new Apple(X_Coordinate, Y_Coordinate);
-    }
-
-    public void changeToStringOfBodyParts(String toString) {
-        for (BodyPart bodypart : getSnake_body()) {
-            bodypart.setToString(toString);
         }
     }
 
@@ -159,11 +88,8 @@ public class Snake {
                 return true;
             }
         }
-        
         return false;
-        
     }
-
 
     public List<BodyPart> getSnake_body() {
         return snake_body;
@@ -172,10 +98,6 @@ public class Snake {
     public BodyPart getBodyPart(int index) {
         return this.snake_body.get(index);
     }
-
-    // public void setSnake_body(List<BodyPart> new_list_of_body) {
-    //     this.snake_body = new_list_of_body;
-    // }
 
     public void changeDirectonOfHead(String direction) {
         if (this.direction_of_head.equals("UP")) {
@@ -218,7 +140,6 @@ public class Snake {
     }
 
     public void handleInput(KeyEvent event) {
-
         switch(event.getCode()) {
             case W:
                 changeDirectonOfHead("UP");
@@ -234,7 +155,6 @@ public class Snake {
             default:
                 break;
         }
-        
     }
 
     public boolean IsAppleEaten() {
@@ -261,11 +181,60 @@ public class Snake {
                 bodypart.setX_Coordinate(bodypart.getX_Coordinate() + 1);
             }
         }
-
         changeDirectonOfBodyParts();
     }
 
+    //========================================================================================================================================================================
+    //Gettere og settere:
+    public void setPlayerName(String playername) {
+        this.playername = playername;
+    }
+
+    public Apple getApple() {
+        return this.apple;
+    }
     
+    public void IncreaseScore() {
+        this.score += 1;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    //========================================================================================================================================================================
+    //Hjelpefunksjoner for testing:
+    public void generate_test_snake() {
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                snake_body.add(new BodyPart(22, 25, true, "RIGHT"));
+            }
+            else {
+                snake_body.add(new BodyPart(22-i, 25, false, "RIGHT"));
+            }
+        }
+    }
+
+    public void generate_test_snake_at_border() {
+        for (int i = 0; i < 3; i++) {
+            if (i == 0) {
+                snake_body.add(new BodyPart(48, 25, true, "RIGHT"));
+            }
+            else {
+                snake_body.add(new BodyPart(48-i, 25, false, "RIGHT"));
+            }
+        }
+    }
+
+    public void generateTestApple(int X_Coordinate, int Y_Coordinate) {
+        this.apple = new Apple(X_Coordinate, Y_Coordinate);
+    }
+
+    public void changeToStringOfBodyParts(String toString) {
+        for (BodyPart bodypart : getSnake_body()) {
+            bodypart.setToString(toString);
+        }
+    }
 
 }
 

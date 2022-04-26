@@ -12,7 +12,7 @@ public class FileHandler implements WriteAndReadToFile{
     @Override
     public void ReadFromFile(File file, List<String> data, String playername, int score) {
         try (Scanner scanner = new Scanner(file)) {
-            System.out.println("File er nå: " + file);
+            System.out.println("Statistikk blir lagret her: " + file);
             
             while (scanner.hasNextLine()) {
                 String nextline = scanner.nextLine();
@@ -29,15 +29,11 @@ public class FileHandler implements WriteAndReadToFile{
                 }
                 data.add(nextline);
             }
-            if (playername != null) {
-                data.add(playername + "," + score);
-            }
-
             Collections.sort(data, new ScoreboardComparator());
         }
-        catch (IOException e) {
-            // System.out.println("Dette skjedde: " + e.getMessage());
-            System.out.println("Readfromfile: " + e.toString());
+        catch (IOException IOe) {
+            System.out.println("Dette skjedde: " + IOe.getMessage());
+            // System.out.println("Readfromfile: " + e.toString());
             
         }
     }
@@ -50,15 +46,22 @@ public class FileHandler implements WriteAndReadToFile{
             }
         }
         catch (IOException IOe) {
-            System.out.println("WriteToFile: " + IOe);
+            System.out.println("Dette skjedde: " + IOe.getMessage());
+            // System.out.println("WriteToFile: " + IOe);
         }  
     }
     
     private boolean TestExistingName(String name, List<String> data) {
         for (String string : data) {
-            if (string.contains(name)) {
-                return true;
+            try {
+                if (string.split(",")[0].equals(name)) {
+                    return true;
+                }
             }
+            catch (Exception e) {
+                continue;
+            }
+            
         }
         return false;
     }

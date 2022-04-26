@@ -26,11 +26,6 @@ public class SnakeTest {
 
     @Test
     public void testChangeToStringOfBodyParts() {
-
-    }
-    @Test
-    public void testGenerateSnake() {
-        System.out.println(snake.getSnake_body());
         //Sjekke at toString1 er gjeldende toString etter generering/oppretting:
         for (BodyPart bodypart : snake.getSnake_body()) {
             assertEquals("toString1", bodypart.getToString());
@@ -44,7 +39,10 @@ public class SnakeTest {
             assertEquals("toString3", bodypart.getToString());
         }
         assertThrows(IllegalArgumentException.class, () -> snake.changeToStringOfBodyParts("toString4"));
+    }
 
+    @Test
+    public void testGenerateSnake() {
         //Sjekke at snake-body blir opprettet på korrekt posisjon
         snake.changeToStringOfBodyParts("toString1");
         assertEquals("[(X = 22, Y = 25, direction = RIGHT, ishead = true), (X = 21, Y = 25, direction = RIGHT, ishead = false), (X = 20, Y = 25, direction = RIGHT, ishead = false)]", String.valueOf(snake.getSnake_body()));
@@ -60,6 +58,18 @@ public class SnakeTest {
         }
         assertEquals(counter, snake.getSnake_body().size()-1);
 
+    }
+
+    @Test
+    public void testGenerateApple() {
+        //Sjekker at eplet blir generert med en gyldig posisjon (ikke på slangens kropp eller utenfor brettet). En loop som kjører 10000 ganger burde indikere at generateApple() funker som den skal
+        for (int i = 0; i < 10000; i++) {
+            snake.generateApple();
+            for (BodyPart bodypart : snake.getSnake_body()) {
+                assertFalse(bodypart.getX_Coordinate() == snake.getApple().getX_Coordinate() && bodypart.getY_Coordinate() == snake.getApple().getY_Coordinate());
+            }
+        }
+        
     }
 
     @Test
@@ -113,7 +123,7 @@ public class SnakeTest {
         snake.move();
         assertTrue(snake.CheckCollision());
 
-        //
+        //Genererer slange rett ved kanten av brettet
         snake.getSnake_body().clear();
         snake.generate_test_snake_at_border();
         assertFalse(snake.CheckCollision());

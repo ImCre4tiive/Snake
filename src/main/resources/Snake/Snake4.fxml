@@ -115,7 +115,6 @@
             <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
       <Label fx:id="score" layoutX="1107.0" layoutY="89.0" prefHeight="78.0" prefWidth="196.0" text="Label" textAlignment="CENTER" textFill="WHITE">
@@ -191,7 +190,7 @@
             <Font name="Copperplate Gothic Bold" size="15.0" />
          </font>
       </Button>
-      <Label fx:id="speed" layoutX="1107.0" layoutY="675.0" prefHeight="78.0" prefWidth="196.0" text="Label" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="speed" layoutX="1107.0" layoutY="675.0" prefHeight="78.0" prefWidth="458.0" text="Label" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Copperplate Gothic Bold" size="30.0" />
          </font>

@@ -31,38 +31,6 @@ public class BodyPart {
             throw new IllegalArgumentException("Her ble det noe feil i input. Den var: X=" + X_Coordinate + " ,Y=" + Y_Coordinate + " , ishead=" + ishead + " , direction= " + direction);
         }
     }
-    
-    public int getX_Coordinate() {
-        return X_Coordinate;
-    }
-
-    public void setX_Coordinate(int x_Coordinate) {
-        X_Coordinate = x_Coordinate;
-    }
-
-    public int getY_Coordinate() {
-        return Y_Coordinate;
-    }
-
-    public void setY_Coordinate(int y_Coordinate) {
-        Y_Coordinate = y_Coordinate;
-    }
-
-    public boolean getIshead() {
-        return ishead;
-    }
-
-    public void setIshead(boolean ishead) {
-        this.ishead = ishead;
-    }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
 
     public String getToString() {
         if (toString1 == true) {
@@ -115,8 +83,37 @@ public class BodyPart {
         else {
             return "Her ble det noe surr";
         }
-        
-        
+    }
+
+    //===================================================================================================================================================================
+    //Gettere og settere:
+    
+    public int getX_Coordinate() {
+        return X_Coordinate;
+    }
+
+    public void setX_Coordinate(int x_Coordinate) {
+        X_Coordinate = x_Coordinate;
+    }
+
+    public int getY_Coordinate() {
+        return Y_Coordinate;
+    }
+
+    public void setY_Coordinate(int y_Coordinate) {
+        Y_Coordinate = y_Coordinate;
+    }
+
+    public boolean getIshead() {
+        return ishead;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
 
