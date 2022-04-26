@@ -394,45 +394,6 @@ public class SnakeController {
         }
     }
 
-    // public void UpdateScoreBoard() {
-    //     boolean removeLine = false;
-    //     String lineToBeRemoved = "";
-
-    //     for (String line : stats_from_file) {
-    //         if (line.contains(playername)) {
-    //             lineToBeRemoved = line;
-    //             removeLine = true;
-    //         }
-    //     }
-    //     if (removeLine == true) {
-    //         stats_from_file.remove(lineToBeRemoved);
-    //     }
-    //     stats_from_file.add(playername + "," + snakegame.getHighScore());
-    //     Collections.sort(stats_from_file, new ScoreboardComparator());
-    //     DisplayScoreBoardContent();
-    // }
-
-    // public void DisplayScoreBoardContent() {
-    //     //Clear-er scoreboardet
-    //     Node node = scoreboard.getChildren().get(0);
-    //     scoreboard.getChildren().clear();
-    //     scoreboard.getChildren().add(0,node);
-
-    //     for (int i = 0; i < stats_from_file.size(); i++) {
-    //         if (i > 9) {
-    //             break;
-    //         }
-
-    //         String[] text = stats_from_file.get(i).split(",");
-    //         for (int j = 0; j < 2; j++) {
-    //             Label label = new Label(text[j]);
-    //             label.setFont(new Font(20));
-    //             label.setTextAlignment(TextAlignment.CENTER);
-    //             scoreboard.add(label, j, i);
-    //         }
-    //     }
-    // }
-
     public boolean TestExistingName(String name) {
         for (String string : stats_from_file) {
             if (string.split(",")[0].equals(name)) {
