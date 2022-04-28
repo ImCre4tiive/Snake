@@ -39,6 +39,7 @@ public class SnakeController {
     @FXML private Pane letterP;
     @FXML private GridPane scoreboard;
     @FXML private Button startgame;
+    @FXML private Button statsbutton;
     @FXML private Button playagain;
     @FXML private Button quitgame;
     @FXML private Button pausegame;
@@ -58,17 +59,20 @@ public class SnakeController {
     private String playername;  
     private List<String> stats_from_file = new ArrayList<>();
     private List<Pane> bodypanes = new ArrayList<>();
-    private FileHandler filehandler = new FileHandler();
+    private FileHandler filehandler;
     private ScoreBoardHandler scoreboardhandler = new ScoreBoardHandler();
     
 
     @FXML
     public void initialize() {
+        HideOverlayElements();
         if (first_startup == true) {
             snakegame = new SnakeGame(this);
-            CheckSystemLanguage();
+            snakegame.setFileAndRead();
+            filehandler = snakegame.getFilehandler();
+            file = filehandler.getFile();
+            stats_from_file = snakegame.getStatsFromFile();
         }
-        HideOverlayElements();
         
         snakegame.generateSnakeAndApple();
         snake = snakegame.getSnake();
@@ -76,7 +80,7 @@ public class SnakeController {
 
         try {
             if (startup_approved == false) {
-                filehandler.ReadFromFile(file, stats_from_file, playername, snakegame.getHighScore());
+                // filehandler.ReadFromFile(file, stats_from_file, playername, snakegame.getHighScore());
                 show_stats();
                 if (name_field_passed == false) {
                     if (ShowNameInputField() == false) {
@@ -84,6 +88,7 @@ public class SnakeController {
                         initialize();
                     }
                     else {
+                        first_startup = false;
                         name_field_passed = true;
                         initialize();
                         scoreboardhandler.UpdateScoreBoard(scoreboard, stats_from_file, playername, snakegame);
@@ -126,7 +131,6 @@ public class SnakeController {
 
             @Override
             public void run() {
-                
                 snake.move();
                 
                 Platform.runLater(new Runnable() {
@@ -182,12 +186,14 @@ public class SnakeController {
         letterD.setVisible(false);
         letterP.setVisible(false);
         startgame.setVisible(false);
+        statsbutton.setVisible(false);
         errortext.setVisible(false);
         gameover.setVisible(false);
         playagain.setVisible(false);
         quitgame.setVisible(false);
         gamepaused.setVisible(false);
         resume.setVisible(false);
+        
     }
 
     @FXML
@@ -203,6 +209,7 @@ public class SnakeController {
         letterD.setVisible(true);
         letterP.setVisible(true);
         startgame.setVisible(true);
+        statsbutton.setVisible(true);
     }
     
     @FXML
@@ -222,6 +229,12 @@ public class SnakeController {
     public void handleStartGameClick() {
         StartMenuPassed = true;
         initialize();
+        DisplayErrorCode("");
+    }
+
+    @FXML
+    public void handleStatsButtonClick() {
+        DisplayErrorCode("Statistikk blir lagret her: " + file.toString());
     }
 
     @FXML
@@ -403,7 +416,6 @@ public class SnakeController {
         return false;
     }
 
-
     public FileHandler getFileHandler() {
         return filehandler;
     }
@@ -416,16 +428,20 @@ public class SnakeController {
         return stats_from_file;
     }
 
+    public boolean getGameStopped() {
+        return GameStopped;
+    }
+
     public void setGameStopped(boolean GameStopped) {
         this.GameStopped = GameStopped;
     }
 
-    public void setGamePaused(boolean GamePaused) {
-        this.GamePaused = GamePaused;
+    public boolean getGamePaused() {
+        return GamePaused;
     }
 
-    public void setApple(Apple apple) {
-        this.apple = apple;
+    public void setGamePaused(boolean GamePaused) {
+        this.GamePaused = GamePaused;
     }
 
     public GridPane getScoreBoard() {
@@ -443,6 +459,26 @@ public class SnakeController {
     public String getPlayerName() {
         return playername;
     }
+
+    public Snake getSnake() {
+        return snake;
+    }
+
+    public void setSnake(Snake snake) {
+        this.snake = snake;
+    }
+
+    public Apple getApple() {
+        return apple;
+    }
+
+    public void setApple(Apple apple) {
+        this.apple = apple;
+    }
+
+    
+
+    
 
 }
 

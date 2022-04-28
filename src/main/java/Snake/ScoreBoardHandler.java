@@ -49,4 +49,21 @@ public class ScoreBoardHandler {
             }
         }
     }
+
+    public void UpdateTestScoreBoard(List<String> stats_from_file, String playername, SnakeGame snakegame) {
+        boolean removeLine = false;
+        String lineToBeRemoved = "";
+
+        for (String line : stats_from_file) {
+            if (line.contains(playername)) {
+                lineToBeRemoved = line;
+                removeLine = true;
+            }
+        }
+        if (removeLine == true) {
+            stats_from_file.remove(lineToBeRemoved);
+        }
+        stats_from_file.add(playername + "," + snakegame.getHighScore());
+        Collections.sort(stats_from_file, new ScoreboardComparator());
+    }
 }

@@ -23,4 +23,8 @@ public class Apple {
     public int getY_Coordinate() {
         return Y_Coordinate;
     }
+
+    public String toString() {
+        return "(X = " + X_Coordinate + ", Y = " + Y_Coordinate + ")";
+    }
 }

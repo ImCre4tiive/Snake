@@ -1,6 +1,8 @@
 package Snake;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -9,10 +11,20 @@ import java.util.Scanner;
 
 public class FileHandler implements WriteAndReadToFile{
 
+    private File file;
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     @Override
     public void ReadFromFile(File file, List<String> data, String playername, int score) {
+        
         try (Scanner scanner = new Scanner(file)) {
-            System.out.println("Statistikk blir lagret her: " + file);
             
             while (scanner.hasNextLine()) {
                 String nextline = scanner.nextLine();
@@ -40,7 +52,9 @@ public class FileHandler implements WriteAndReadToFile{
 
     @Override
     public void WriteToFile(File file, List<String> data) {
+
         try (FileWriter filewriter = new FileWriter(file, false)) {
+            
             for (String string : data) {
                 filewriter.write(string + "\n");
             }

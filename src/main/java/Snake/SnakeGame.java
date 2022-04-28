@@ -1,15 +1,17 @@
 package Snake;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SnakeGame {    
     private SnakeController controller = new SnakeController();
     private Snake snake;
     private Apple apple;
-    private FileHandler filehandler;
+    private FileHandler filehandler = new FileHandler();
     private File file;
-    private List<String> stats_from_file;
+    private List<String> stats_from_file = new ArrayList<>();
     private int loopdelay = 75;
     private int speedvalue = 1;
     private int highscore = 0;
@@ -21,16 +23,29 @@ public class SnakeGame {
         this.controller = controller;
     }
 
+    public SnakeGame() {
+    }
+
+    public void setController(SnakeController controller) {
+        this.controller = controller;
+    }
+
     public void generateSnakeAndApple() {
         snake = new Snake();
         apple = snake.getApple();
     }
 
-    public String update() {
-        filehandler = controller.getFileHandler();
-        stats_from_file = controller.getStatsFromFile();
-        file = controller.getFile();
+    public void generateAppleForTest() {
 
+    }
+
+    public void setFileAndRead() {
+        filehandler.setFile(new File(Paths.get(".").toAbsolutePath().normalize().toString(), "SnakeStats.txt"));
+        file = filehandler.getFile();
+        filehandler.ReadFromFile(file, stats_from_file, controller.getPlayerName(), highscore);
+    }
+
+    public String update() {
         try {
             if (GameStopped == false && GamePaused == false) {
                 if (snake.IsAppleEaten() == true) {
@@ -69,6 +84,45 @@ public class SnakeGame {
         }
     }
 
+//Har tatt bort metodekall som har med oppdatering av UI å gjøre
+    public String testUpdate() { 
+        try {
+            if (GameStopped == false && GamePaused == false) {
+                if (snake.IsAppleEaten() == true) {
+                    snake.generateTestApple(10, 10);
+                    UpdateApple(snake.getApple());
+                    snake.IncreaseLengthOfSnake();
+                    snake.IncreaseScore();
+                    updateHighScore();
+                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
+                        speedvalue += 1;
+                        loopdelay -= 4;
+                        return "restart";
+                    }
+                }
+                if (snake.CheckCollision() == true) {
+                    UpdateGameStopped(true);
+                    loopdelay = 75;
+                    speedvalue = 1;
+                    return "restart";
+                }
+            }
+            return "ingenting";
+            
+        } catch (IllegalArgumentException e) {
+            UpdateGameStopped(true);
+            loopdelay = 75;
+            speedvalue = 1;
+            return "restart";
+        }
+    }
+
+
+
+    public void setSnake(Snake snake) {
+        this.snake = snake;
+    }
+
     public void updateHighScore() {
         if (snake.getScore() > highscore) {
             highscore = snake.getScore();
@@ -77,6 +131,10 @@ public class SnakeGame {
 
     public int getHighScore() {
         return highscore;
+    }
+
+    public void setHighScore(int highscore) {
+        this.highscore = highscore;
     }
 
     public void UpdateApple(Apple apple) {
@@ -122,14 +180,25 @@ public class SnakeGame {
         this.speedvalue = speedvalue;
     }
 
+    public boolean getGameStopped() {
+        return GameStopped;
+    }
+
     public void setGameStopped(boolean gameStopped) {
         GameStopped = gameStopped;
+    }
+
+    public boolean getGamePaused() {
+        return GamePaused;
     }
 
     public void setGamePaused(boolean gamePaused) {
         GamePaused = gamePaused;
     }
 
-    
-    
+    public List<String> getStatsFromFile() {
+        return stats_from_file;
+    }
+
+
 }
