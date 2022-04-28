@@ -54,8 +54,8 @@ public class SnakeController {
     private boolean first_startup = true;
     private boolean existing_name = false;
     private boolean name_field_passed = false;
-    private boolean GameStopped = false;
-    private boolean GamePaused = false;
+    // private boolean GameStopped = false;
+    // private boolean GamePaused = false;
     private String playername;  
     private List<String> stats_from_file = new ArrayList<>();
     private List<Pane> bodypanes = new ArrayList<>();
@@ -136,16 +136,28 @@ public class SnakeController {
                 Platform.runLater(new Runnable() {
                     @Override public void run() {
                         try {
-                            if (GameStopped == false && GamePaused == false) {
-                                draw_snake(snake);
-                                draw_apple(apple);
-                                if (snakegame.update() == "restart") {
+                            if (snakegame.getGameStopped() == false && snakegame.getGamePaused() == false) {
+                                drawgame();
+
+                                String gamestatus = snakegame.update();
+                                if (gamestatus.equals("restart")) {
                                     timer.cancel();
+                                    initialize();
                                     start_loop();
-                                    
+                                }
+                                else if (gamestatus.equals("AppleEaten")) {
+                                    timer.cancel();
+                                    show_stats();
+                                    scoreboardhandler.UpdateScoreBoard(scoreboard, stats_from_file, playername, snakegame);
+                                    start_loop();
+                                }
+                                else if (gamestatus.equals("Collision")) {
+                                    timer.cancel();
+                                    initialize();
+                                    start_loop();
                                 }
                             }
-                            else if (GamePaused == true) {
+                            else if (snakegame.getGamePaused() == true) {
                                 ShowPauseMenu();
                                 timer.cancel();
                             }
@@ -155,7 +167,6 @@ public class SnakeController {
                             }
                         }
                         catch (Exception e) {
-                            GameStopped = true;
                             snakegame.setGameStopped(true);
                             initialize();
                             snakegame.setLoopdelay(75);
@@ -171,7 +182,11 @@ public class SnakeController {
         timer.scheduleAtFixedRate(task, 0, snakegame.getLoopdelay());
     }
 
-//==============================================================================================================================================================================
+    public void drawgame() {
+        draw_snake(snake);
+        draw_apple(apple);
+    }
+    //==============================================================================================================================================================================
     //Menyer og overlay
     @FXML
     public void HideOverlayElements() {
@@ -240,7 +255,6 @@ public class SnakeController {
     @FXML
     public void handlePlayAgainClick() {
         initialize();
-        GameStopped = false;
         snakegame.setGameStopped(false);
         grid.requestFocus();
     }
@@ -253,8 +267,7 @@ public class SnakeController {
 
     @FXML
     public void handlePauseClick() {
-        if (GameStopped == false) {
-            GamePaused = true;
+        if (snakegame.getGameStopped() == false) {
             snakegame.setGamePaused(true);
             grid.requestFocus();
         }
@@ -263,7 +276,6 @@ public class SnakeController {
 
     @FXML
     public void handleResumeClick() {
-        GamePaused = false;
         snakegame.setGamePaused(false);
         gamepaused.setVisible(false);
         resume.setVisible(false);
@@ -376,17 +388,15 @@ public class SnakeController {
 
     @FXML
     public void handleKeyPress(KeyEvent event) {
-        if (GameStopped == false) {
+        if (snakegame.getGameStopped() == false) {
             try {
                 switch(event.getCode()) {
                     case P:
-                        if (GamePaused == false) {
-                            GamePaused = true;
+                        if (snakegame.getGamePaused() == false) {
                             snakegame.setGamePaused(true);
                             grid.requestFocus();
                         }
                         else {
-                            GamePaused = false;
                             snakegame.setGamePaused(false);
                             gamepaused.setVisible(false);
                             resume.setVisible(false);
@@ -396,7 +406,7 @@ public class SnakeController {
                     default:
                         break;
                 }
-                if (GamePaused == false) {
+                if (snakegame.getGamePaused() == false) {
                     snake.handleInput(event);
                 }
                 draw_snake(snake);
@@ -428,21 +438,21 @@ public class SnakeController {
         return stats_from_file;
     }
 
-    public boolean getGameStopped() {
-        return GameStopped;
-    }
+    // public boolean getGameStopped() {
+    //     return GameStopped;
+    // }
 
-    public void setGameStopped(boolean GameStopped) {
-        this.GameStopped = GameStopped;
-    }
+    // public void setGameStopped(boolean GameStopped) {
+    //     this.GameStopped = GameStopped;
+    // }
 
-    public boolean getGamePaused() {
-        return GamePaused;
-    }
+    // public boolean getGamePaused() {
+    //     return GamePaused;
+    // }
 
-    public void setGamePaused(boolean GamePaused) {
-        this.GamePaused = GamePaused;
-    }
+    // public void setGamePaused(boolean GamePaused) {
+    //     this.GamePaused = GamePaused;
+    // }
 
     public GridPane getScoreBoard() {
         return scoreboard;

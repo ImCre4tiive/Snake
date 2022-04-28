@@ -51,32 +51,28 @@ public class SnakeGame {
                 if (snake.IsAppleEaten() == true) {
                     snake.generateApple();
                     UpdateApple(snake.getApple());
-                    controller.draw_apple(apple);
                     snake.IncreaseLengthOfSnake();
                     snake.IncreaseScore();
                     updateHighScore();
-                    controller.show_stats();
-                    controller.getScoreBoardHandler().UpdateScoreBoard(controller.getScoreBoard(), stats_from_file, controller.getPlayerName(), this);
                     filehandler.WriteToFile(file, stats_from_file);
                     if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
                         speedvalue += 1;
                         loopdelay -= 4;
-                        return "restart";
+                        
                     }
+                    return "AppleEaten";
                 }
                 if (snake.CheckCollision() == true) {
-                    UpdateGameStopped(true);
-                    controller.initialize();
+                    GameStopped = true;
                     loopdelay = 75;
                     speedvalue = 1;
-                    return "restart";
+                    return "Collision";
                 }
             }
-            return "do nothing :-)";
+            return "Ingenting";
             
-        } catch (IllegalArgumentException e) {
-            UpdateGameStopped(true);
-            controller.initialize();
+        } catch (Exception e) {
+            GameStopped = true;
             loopdelay = 75;
             speedvalue = 1;
             return "restart";
@@ -101,7 +97,8 @@ public class SnakeGame {
                     }
                 }
                 if (snake.CheckCollision() == true) {
-                    UpdateGameStopped(true);
+                    GameStopped = true;
+                    // UpdateGameStopped(true);
                     loopdelay = 75;
                     speedvalue = 1;
                     return "restart";
@@ -110,7 +107,8 @@ public class SnakeGame {
             return "ingenting";
             
         } catch (IllegalArgumentException e) {
-            UpdateGameStopped(true);
+            // UpdateGameStopped(true);
+            GameStopped = true;
             loopdelay = 75;
             speedvalue = 1;
             return "restart";
@@ -142,15 +140,15 @@ public class SnakeGame {
         this.apple = apple;
     }
 
-    public void UpdateGameStopped(boolean GameStopped) {
-        controller.setGameStopped(GameStopped);
-        this.GameStopped = GameStopped;
-    }
+    // public void UpdateGameStopped(boolean GameStopped) {
+    //     controller.setGameStopped(GameStopped);
+    //     this.GameStopped = GameStopped;
+    // }
 
-    public void UpdateGamePaused(boolean GamePaused) {
-        controller.setGamePaused(GamePaused);
-        this.GamePaused = GamePaused;
-    }
+    // public void UpdateGamePaused(boolean GamePaused) {
+    //     controller.setGamePaused(GamePaused);
+    //     this.GamePaused = GamePaused;
+    // }
 
     public Snake getSnake() {
         return snake;
