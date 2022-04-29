@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class FileHandler implements WriteAndReadToFile{
+public class SnakeFileHandler implements WriteAndReadToFile{
 
     private File file;
 
@@ -37,7 +37,7 @@ public class FileHandler implements WriteAndReadToFile{
                     
                 } catch (Exception e) {
                     System.out.println(e);
-                    continue;
+                    continue;   
                 }
                 data.add(nextline);
             }
@@ -45,6 +45,11 @@ public class FileHandler implements WriteAndReadToFile{
         }
         catch (IOException IOe) {
             System.out.println("Dette skjedde: " + IOe.getMessage());
+            try {
+                file.createNewFile();
+            } catch (Exception e) {
+                System.out.println("Dette skjedde: " + e.getMessage());
+            }
             // System.out.println("Readfromfile: " + e.toString());
             
         }

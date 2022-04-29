@@ -91,36 +91,28 @@ public class Snake {
         return false;
     }
 
-    public List<BodyPart> getSnake_body() {
-        return snake_body;
-    }
-
-    public BodyPart getBodyPart(int index) {
-        return this.snake_body.get(index);
-    }
-
     public void changeDirectonOfHead(String direction) {
         if (this.direction_of_head.equals("UP")) {
             if (direction.equals("RIGHT") || direction.equals("LEFT")) {
-                snake_body.get(0).setDirection(direction);
+                getBodyPart(0).setDirection(direction);
                 this.direction_of_head = direction;
             }
         }
         else if (this.direction_of_head.equals("DOWN")) {
             if (direction.equals("RIGHT") || direction.equals("LEFT")) {
-                snake_body.get(0).setDirection(direction);
+                getBodyPart(0).setDirection(direction);
                 this.direction_of_head = direction;
             }
         }
         else if (this.direction_of_head.equals("LEFT")) {
             if (direction.equals("UP") || direction.equals("DOWN")) {
-                snake_body.get(0).setDirection(direction);
+                getBodyPart(0).setDirection(direction);
                 this.direction_of_head = direction;
             }
         }
         else if (this.direction_of_head.equals("RIGHT")) {
             if (direction.equals("UP") || direction.equals("DOWN")) {
-                snake_body.get(0).setDirection(direction);
+                getBodyPart(0).setDirection(direction);
                 this.direction_of_head = direction;
             }
         }
@@ -158,10 +150,9 @@ public class Snake {
     }
 
     public boolean IsAppleEaten() {
-        for (BodyPart bodypart : snake_body) {
-            if (bodypart.getX_Coordinate() == this.apple.getX_Coordinate() && bodypart.getY_Coordinate() == this.apple.getY_Coordinate()) {
-                return true;
-            }
+        BodyPart head = getBodyPart(0);
+        if (head.getX_Coordinate() == apple.getX_Coordinate() && head.getY_Coordinate() == apple.getY_Coordinate()) {
+            return true;
         }
         return false;
     }
@@ -186,6 +177,14 @@ public class Snake {
 
     //========================================================================================================================================================================
     //Gettere og settere:
+    public List<BodyPart> getSnake_body() {
+        return snake_body;
+    }
+
+    public BodyPart getBodyPart(int index) {
+        return this.snake_body.get(index);
+    }
+
     public void setPlayerName(String playername) {
         this.playername = playername;
     }
@@ -231,7 +230,7 @@ public class Snake {
     }
 
     public void changeToStringOfBodyParts(String toString) {
-        for (BodyPart bodypart : getSnake_body()) {
+        for (BodyPart bodypart : snake_body) {
             bodypart.setToString(toString);
         }
     }

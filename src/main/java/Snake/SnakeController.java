@@ -29,7 +29,7 @@ public class SnakeController {
     @FXML private Label gamepaused;
     @FXML private Label snake_text;
     @FXML private Label use_text;
-    @FXML private Label to_move_text;
+    @FXML private Label to_turn_text;
     @FXML private Label press_text;
     @FXML private Label to_pause_text;
     @FXML private Pane letterW;
@@ -59,18 +59,17 @@ public class SnakeController {
     private String playername;  
     private List<String> stats_from_file = new ArrayList<>();
     private List<Pane> bodypanes = new ArrayList<>();
-    private FileHandler filehandler;
     private ScoreBoardHandler scoreboardhandler = new ScoreBoardHandler();
     
 
     @FXML
     public void initialize() {
         HideOverlayElements();
+
         if (first_startup == true) {
             snakegame = new SnakeGame(this);
             snakegame.setFileAndRead();
-            filehandler = snakegame.getFilehandler();
-            file = filehandler.getFile();
+            file = snakegame.getFilehandler().getFile();
             stats_from_file = snakegame.getStatsFromFile();
         }
         
@@ -140,18 +139,19 @@ public class SnakeController {
                                 drawgame();
 
                                 String gamestatus = snakegame.update();
-                                if (gamestatus.equals("restart")) {
+                                if (gamestatus.equals("RESTART")) {
                                     timer.cancel();
                                     initialize();
                                     start_loop();
                                 }
-                                else if (gamestatus.equals("AppleEaten")) {
+                                else if (gamestatus.equals("APPLEEATEN")) {
                                     timer.cancel();
                                     show_stats();
                                     scoreboardhandler.UpdateScoreBoard(scoreboard, stats_from_file, playername, snakegame);
+                                    snakegame.getFilehandler().WriteToFile(file, stats_from_file);
                                     start_loop();
                                 }
-                                else if (gamestatus.equals("Collision")) {
+                                else if (gamestatus.equals("COLLISION")) {
                                     timer.cancel();
                                     initialize();
                                     start_loop();
@@ -192,7 +192,7 @@ public class SnakeController {
     public void HideOverlayElements() {
         snake_text.setVisible(false);
         use_text.setVisible(false);
-        to_move_text.setVisible(false);
+        to_turn_text.setVisible(false);
         press_text.setVisible(false);
         to_pause_text.setVisible(false);
         letterW.setVisible(false);
@@ -215,7 +215,7 @@ public class SnakeController {
     public void ShowStartMenu() {
         snake_text.setVisible(true);
         use_text.setVisible(true);
-        to_move_text.setVisible(true);
+        to_turn_text.setVisible(true);
         press_text.setVisible(true);
         to_pause_text.setVisible(true);
         letterW.setVisible(true);
@@ -262,12 +262,12 @@ public class SnakeController {
     @FXML
     public void handleQuitGameClick() {
         Platform.exit();
-        filehandler.WriteToFile(file, stats_from_file);
+        snakegame.getFilehandler().WriteToFile(file, stats_from_file);
     }
 
     @FXML
     public void handlePauseClick() {
-        if (snakegame.getGameStopped() == false) {
+        if (snakegame.getGameStopped() == false && StartMenuPassed == true) {
             snakegame.setGamePaused(true);
             grid.requestFocus();
         }
@@ -281,21 +281,6 @@ public class SnakeController {
         resume.setVisible(false);
         start_loop();
         grid.requestFocus();
-    }
-
-    public void CheckSystemLanguage() {
-        String language = System.getProperty("user.language");
-        if (language.equals("en")) {
-            // System.out.println("Språk = " + language);
-            file = new File(System.getProperty("user.home") + "/Desktop", "SnakeStats.txt");
-        }
-        else if (language.equals("no")) {
-            // System.out.println("Språk = " + language);
-            file = new File(System.getProperty("user.home") + "/Skrivebord", "SnakeStats.txt");
-        }
-        else {
-            DisplayErrorCode("Operativsystemets språk støttes ikke, filhåndtering vil ikke fungere.");
-        }
     }
 
     public void DisplayErrorCode(String errormessage) {
@@ -424,10 +409,6 @@ public class SnakeController {
             }
         }
         return false;
-    }
-
-    public FileHandler getFileHandler() {
-        return filehandler;
     }
 
     public File getFile() {

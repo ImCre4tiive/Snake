@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="957.0" prefWidth="1388.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Snake.SnakeController">
+<AnchorPane prefHeight="957.0" prefWidth="1390.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Snake.SnakeController">
   <children>
       <GridPane fx:id="grid" focusTraversable="true" gridLinesVisible="true" layoutX="0.5" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKeyPress" prefHeight="800" prefWidth="1080.0" style="-fx-background-color: gray;">
         <columnConstraints>
@@ -255,7 +255,7 @@
             </Label>
          </children>
       </Pane>
-      <Label fx:id="to_move_text" layoutX="625.0" layoutY="300.0" prefHeight="78.0" prefWidth="186.0" text="to move" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="to_turn_text" layoutX="625.0" layoutY="300.0" prefHeight="78.0" prefWidth="186.0" text="to turn" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Copperplate Gothic Bold" size="40.0" />
          </font>
@@ -279,7 +279,7 @@
             <Font name="Copperplate Gothic Bold" size="40.0" />
          </font>
       </Label>
-      <Button fx:id="startgame" layoutX="460.0" layoutY="510.0" mnemonicParsing="false" onAction="#handleStartGameClick" prefHeight="36.0" prefWidth="150.0" style="-fx-border-color: green;" text="start game">
+      <Button fx:id="startgame" layoutX="460.0" layoutY="510.0" mnemonicParsing="false" onAction="#handleStartGameClick" prefHeight="36.0" prefWidth="150.0" text="start game">
          <font>
             <Font name="Copperplate Gothic Bold" size="15.0" />
          </font>

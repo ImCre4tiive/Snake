@@ -9,7 +9,7 @@ public class SnakeGame {
     private SnakeController controller = new SnakeController();
     private Snake snake;
     private Apple apple;
-    private FileHandler filehandler = new FileHandler();
+    private SnakeFileHandler filehandler = new SnakeFileHandler();
     private File file;
     private List<String> stats_from_file = new ArrayList<>();
     private int loopdelay = 75;
@@ -17,7 +17,6 @@ public class SnakeGame {
     private int highscore = 0;
     private boolean GameStopped = false;
     private boolean GamePaused = false;
-    private boolean first_startup = true;
 
     public SnakeGame(SnakeController controller) {
         this.controller = controller;
@@ -40,9 +39,13 @@ public class SnakeGame {
     }
 
     public void setFileAndRead() {
-        filehandler.setFile(new File(Paths.get(".").toAbsolutePath().normalize().toString(), "SnakeStats.txt"));
+        filehandler.setFile(getFile("SnakeStats"));
         file = filehandler.getFile();
         filehandler.ReadFromFile(file, stats_from_file, controller.getPlayerName(), highscore);
+    }
+
+    public File getFile(String filename) {
+        return new File(Paths.get(".").toAbsolutePath().normalize().toString(), filename + ".txt");
     }
 
     public String update() {
@@ -54,68 +57,30 @@ public class SnakeGame {
                     snake.IncreaseLengthOfSnake();
                     snake.IncreaseScore();
                     updateHighScore();
-                    filehandler.WriteToFile(file, stats_from_file);
+                    // filehandler.WriteToFile(file, stats_from_file);
                     if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
                         speedvalue += 1;
                         loopdelay -= 4;
                         
                     }
-                    return "AppleEaten";
+                    return "APPLEEATEN";
                 }
                 if (snake.CheckCollision() == true) {
                     GameStopped = true;
                     loopdelay = 75;
                     speedvalue = 1;
-                    return "Collision";
+                    return "COLLISION";
                 }
             }
-            return "Ingenting";
+            return "";
             
         } catch (Exception e) {
             GameStopped = true;
             loopdelay = 75;
             speedvalue = 1;
-            return "restart";
-            
+            return "RESTART";
         }
     }
-
-//Har tatt bort metodekall som har med oppdatering av UI å gjøre
-    public String testUpdate() { 
-        try {
-            if (GameStopped == false && GamePaused == false) {
-                if (snake.IsAppleEaten() == true) {
-                    snake.generateTestApple(10, 10);
-                    UpdateApple(snake.getApple());
-                    snake.IncreaseLengthOfSnake();
-                    snake.IncreaseScore();
-                    updateHighScore();
-                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
-                        speedvalue += 1;
-                        loopdelay -= 4;
-                        return "restart";
-                    }
-                }
-                if (snake.CheckCollision() == true) {
-                    GameStopped = true;
-                    // UpdateGameStopped(true);
-                    loopdelay = 75;
-                    speedvalue = 1;
-                    return "restart";
-                }
-            }
-            return "ingenting";
-            
-        } catch (IllegalArgumentException e) {
-            // UpdateGameStopped(true);
-            GameStopped = true;
-            loopdelay = 75;
-            speedvalue = 1;
-            return "restart";
-        }
-    }
-
-
 
     public void setSnake(Snake snake) {
         this.snake = snake;
@@ -158,7 +123,7 @@ public class SnakeGame {
         return apple;
     }
 
-    public FileHandler getFilehandler() {
+    public SnakeFileHandler getFilehandler() {
         return filehandler;
     }
 
@@ -196,6 +161,10 @@ public class SnakeGame {
 
     public List<String> getStatsFromFile() {
         return stats_from_file;
+    }
+
+    public File getFile() {
+        return file;
     }
 
 

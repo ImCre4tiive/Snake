@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,25 +28,25 @@ public class SnakeGameTest {
     public void testUpdate() {
         //Eplet er 2 foran slangen, sjekker at alle verdier blir oppdatert på korrekt måte, og at funksjonen returnerer riktig string ved restart, nemlig "restart":
         snake.move();
-        //Sjekker at Update() returnerer "ingenting" så lenge loopen IKKE skal restartes:
-        assertEquals("ingenting", snakegame.testUpdate());
+        //Sjekker at Update() returnerer den tomme strengen "" så lenge loopen IKKE skal restartes:
+        assertEquals("", snakegame.update());
         assertEquals(false, snake.IsAppleEaten());
         snake.move();
         assertEquals(true, snake.IsAppleEaten());
-        snakegame.testUpdate();
+        snakegame.update();
         //Sjekker om eplet har blitt spist og verdier er blitt oppdatert 
-        assertEquals(10, snake.getApple().getX_Coordinate());
-        assertEquals(10, snake.getApple().getY_Coordinate());
+        assertNotEquals(24, snake.getApple().getX_Coordinate());
+        assertNotEquals(25, snake.getApple().getY_Coordinate());
         assertEquals(5, snake.getSnake_body().size());
         assertEquals(1, snake.getScore());
         assertEquals(1, snakegame.getHighScore());
         assertEquals(false, snakegame.getGameStopped());
 
         
-        //Sjekker at spillets fart øker ved at score = 2 og at Update() signaliserer til controller at farten skal økes ved å returnere "restart"
+        //Sjekker at spillets fart øker ved at score = 2 og at Update() signaliserer til controller at eplet er spist ved å returnere "APPLEEATEN"
         snake.generateTestApple(snake.getBodyPart(0).getX_Coordinate() + 1, snake.getBodyPart(0).getY_Coordinate());
         snake.move();
-        assertEquals("restart", snakegame.testUpdate());
+        assertEquals("APPLEEATEN", snakegame.update());
         assertEquals(2, snakegame.getSpeedvalue());
         assertEquals(71, snakegame.getLoopdelay());
 
@@ -57,10 +58,11 @@ public class SnakeGameTest {
         snake.move();
         snake.changeDirectonOfHead("DOWN");
         snake.move();
-        assertEquals("restart", snakegame.testUpdate());
+        assertEquals("COLLISION", snakegame.update());
         assertEquals(true, snakegame.getGameStopped());
         assertEquals(75, snakegame.getLoopdelay());
         assertEquals(1, snakegame.getSpeedvalue());
+
     }
 
 }

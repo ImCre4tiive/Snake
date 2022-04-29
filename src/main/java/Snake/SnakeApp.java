@@ -4,10 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.awt.*;
 
 
 
 public class SnakeApp extends Application {
+    
     
     @Override
     public void start(Stage primaryStage) throws IOException{
@@ -18,7 +20,7 @@ public class SnakeApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(SnakeApp.class.getResource("Snake4.fxml"));
         // Create a new scene from that FXML data
-        Scene root = new Scene(loader.load(), 1450, 900);        
+        Scene root = new Scene(loader.load());        
         
         // Set the scene and display the stage
         primaryStage.setScene(root);

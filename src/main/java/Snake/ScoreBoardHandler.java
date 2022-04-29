@@ -50,6 +50,7 @@ public class ScoreBoardHandler {
         }
     }
 
+    //Har fjernet metodekallet til DisplayScoreBoardContent() for å kunne teste logikken i UpdateTestScoreBoard()
     public void UpdateTestScoreBoard(List<String> stats_from_file, String playername, SnakeGame snakegame) {
         boolean removeLine = false;
         String lineToBeRemoved = "";

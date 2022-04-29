@@ -65,8 +65,10 @@ public class SnakeTest {
         //Sjekker at eplet blir generert med en gyldig posisjon (ikke på slangens kropp eller utenfor brettet). En loop som kjører 10000 ganger burde indikere at generateApple() funker som den skal
         for (int i = 0; i < 10000; i++) {
             snake.generateApple();
+            apple = snake.getApple();
+            assertFalse(apple.getX_Coordinate() > 49 || apple.getX_Coordinate() < 0 || apple.getY_Coordinate() > 49 || apple.getY_Coordinate() < 0);
             for (BodyPart bodypart : snake.getSnake_body()) {
-                assertFalse(bodypart.getX_Coordinate() == snake.getApple().getX_Coordinate() && bodypart.getY_Coordinate() == snake.getApple().getY_Coordinate());
+                assertFalse(bodypart.getX_Coordinate() == apple.getX_Coordinate() && bodypart.getY_Coordinate() == apple.getY_Coordinate());
             }
         }
         
@@ -94,10 +96,8 @@ public class SnakeTest {
         assertEquals("UP", snake.getBodyPart(0).getDirection());
         
         snake.move();
-        // snake.move();
         assertEquals("[(X = 22, Y = 24, direction = UP, ishead = true), (X = 22, Y = 25, direction = UP, ishead = false), (X = 21, Y = 25, direction = RIGHT, ishead = false)]", String.valueOf(snake.getSnake_body()));
         snake.move();
-        System.out.println(snake.getSnake_body());
         assertEquals("[(X = 22, Y = 23, direction = UP, ishead = true), (X = 22, Y = 24, direction = UP, ishead = false), (X = 22, Y = 25, direction = UP, ishead = false)]", String.valueOf(snake.getSnake_body()));
     }
 
@@ -138,6 +138,7 @@ public class SnakeTest {
         assertEquals(3, snake.getSnake_body().size());
         snake.IncreaseLengthOfSnake();
         assertEquals(5, snake.getSnake_body().size());
+        //Sjekker at de nye bodypart-ene har riktig retning
         for (BodyPart bodypart : snake.getSnake_body()) {
             assertTrue(bodypart.getDirection().equals("RIGHT"));
         }
