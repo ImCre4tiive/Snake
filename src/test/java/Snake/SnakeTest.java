@@ -71,7 +71,6 @@ public class SnakeTest {
                 assertFalse(bodypart.getX_Coordinate() == apple.getX_Coordinate() && bodypart.getY_Coordinate() == apple.getY_Coordinate());
             }
         }
-        
     }
 
     @Test

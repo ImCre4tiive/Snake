@@ -34,9 +34,6 @@ public class SnakeGame {
         apple = snake.getApple();
     }
 
-    public void generateAppleForTest() {
-
-    }
 
     public void setFileAndRead() {
         filehandler.setFile(getFile("SnakeStats"));

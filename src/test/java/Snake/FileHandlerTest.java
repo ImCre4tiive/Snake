@@ -53,7 +53,7 @@ public class FileHandlerTest {
     }
 
     @Test
-    public void testReadFromFile() {
+    public void testReadFromFile() throws IOException {
         filehandler.ReadFromFile(snakegame.getFile("test_stats"), data_from_file, "Jakob", 16);
         assertEquals("[Hans,10, Ola,6, Kåre,3]", String.valueOf(data_from_file));
     }

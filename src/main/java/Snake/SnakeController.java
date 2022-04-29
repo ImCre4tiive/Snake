@@ -189,7 +189,7 @@ public class SnakeController {
     //==============================================================================================================================================================================
     //Menyer og overlay
     @FXML
-    public void HideOverlayElements() {
+    private void HideOverlayElements() {
         snake_text.setVisible(false);
         use_text.setVisible(false);
         to_turn_text.setVisible(false);
@@ -212,7 +212,7 @@ public class SnakeController {
     }
 
     @FXML
-    public void ShowStartMenu() {
+    private void ShowStartMenu() {
         snake_text.setVisible(true);
         use_text.setVisible(true);
         to_turn_text.setVisible(true);
@@ -228,45 +228,45 @@ public class SnakeController {
     }
     
     @FXML
-    public void ShowGameOverMenu() {
+    private void ShowGameOverMenu() {
         gameover.setVisible(true);
         playagain.setVisible(true);
         quitgame.setVisible(true);
     }
 
     @FXML
-    public void ShowPauseMenu() {
+    private void ShowPauseMenu() {
         gamepaused.setVisible(true);
         resume.setVisible(true);
     }
 
     @FXML
-    public void handleStartGameClick() {
+    private void handleStartGameClick() {
         StartMenuPassed = true;
         initialize();
         DisplayErrorCode("");
     }
 
     @FXML
-    public void handleStatsButtonClick() {
+    private void handleStatsButtonClick() {
         DisplayErrorCode("Statistikk blir lagret her: " + file.toString());
     }
 
     @FXML
-    public void handlePlayAgainClick() {
+    private void handlePlayAgainClick() {
         initialize();
         snakegame.setGameStopped(false);
         grid.requestFocus();
     }
 
     @FXML
-    public void handleQuitGameClick() {
+    private void handleQuitGameClick() {
         Platform.exit();
         snakegame.getFilehandler().WriteToFile(file, stats_from_file);
     }
 
     @FXML
-    public void handlePauseClick() {
+    private void handlePauseClick() {
         if (snakegame.getGameStopped() == false && StartMenuPassed == true) {
             snakegame.setGamePaused(true);
             grid.requestFocus();
@@ -275,7 +275,7 @@ public class SnakeController {
     }
 
     @FXML
-    public void handleResumeClick() {
+    private void handleResumeClick() {
         snakegame.setGamePaused(false);
         gamepaused.setVisible(false);
         resume.setVisible(false);
@@ -283,13 +283,13 @@ public class SnakeController {
         grid.requestFocus();
     }
 
-    public void DisplayErrorCode(String errormessage) {
+    private void DisplayErrorCode(String errormessage) {
         errortext.setText(errormessage);
         errortext.setVisible(true);
     }
 
     @FXML 
-    public boolean ShowNameInputField() {
+    private boolean ShowNameInputField() {
         TextInputDialog popup = new TextInputDialog();
         if (first_startup == true) {
             popup.setTitle("Registrering");
@@ -358,7 +358,7 @@ public class SnakeController {
     }
 
     @FXML
-    public void show_stats() {
+    private void show_stats() {
         highscore.setText("Highscore: " + String.valueOf(snakegame.getHighScore()));
         score.setText("Score: " + String.valueOf(snake.getScore()));
         length.setText("Length: " + String.valueOf(snake.getSnake_body().size()));
@@ -372,7 +372,7 @@ public class SnakeController {
     }
 
     @FXML
-    public void handleKeyPress(KeyEvent event) {
+    private void handleKeyPress(KeyEvent event) {
         if (snakegame.getGameStopped() == false) {
             try {
                 switch(event.getCode()) {
@@ -402,45 +402,13 @@ public class SnakeController {
         }
     }
 
-    public boolean TestExistingName(String name) {
+    private boolean TestExistingName(String name) {
         for (String string : stats_from_file) {
             if (string.split(",")[0].equals(name)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public List<String> getStatsFromFile() {
-        return stats_from_file;
-    }
-
-    // public boolean getGameStopped() {
-    //     return GameStopped;
-    // }
-
-    // public void setGameStopped(boolean GameStopped) {
-    //     this.GameStopped = GameStopped;
-    // }
-
-    // public boolean getGamePaused() {
-    //     return GamePaused;
-    // }
-
-    // public void setGamePaused(boolean GamePaused) {
-    //     this.GamePaused = GamePaused;
-    // }
-
-    public GridPane getScoreBoard() {
-        return scoreboard;
-    }
-
-    public void setScoreBoard(GridPane scoreboard) {
-        this.scoreboard = scoreboard;
     }
 
     public ScoreBoardHandler getScoreBoardHandler() {
@@ -451,26 +419,9 @@ public class SnakeController {
         return playername;
     }
 
-    public Snake getSnake() {
-        return snake;
-    }
-
-    public void setSnake(Snake snake) {
-        this.snake = snake;
-    }
-
-    public Apple getApple() {
-        return apple;
-    }
-
     public void setApple(Apple apple) {
         this.apple = apple;
     }
-
-    
-
-    
-
 }
 
 

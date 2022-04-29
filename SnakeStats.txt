@@ -1,19 +1,6 @@
 Jan Thomas,21
 Audun,21
-Tone,20
-Jon,15
-Ruth,13
-Tove,12
-Jens,10
-Tore,8
-test,8
-Chutimon,7
-Tore T,6
-Arve,5
-hfh,4
-Erik,3
-Jensern,3
-dd,2
-Hei,1
-tt,1
-adad,1
+peder,17
+o,17
+Jens,2
+Jensern,2

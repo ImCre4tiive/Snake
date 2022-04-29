@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,7 +63,12 @@ public class SnakeGameTest {
         assertEquals(true, snakegame.getGameStopped());
         assertEquals(75, snakegame.getLoopdelay());
         assertEquals(1, snakegame.getSpeedvalue());
-
     }
 
+    @Test
+    public void testSetFileAndRead() {
+        snakegame.setFileAndRead();
+        assertEquals("C:\\Users\\jmnb1\\OneDrive - NTNU\\2. semester\\Objektorientert programmering\\Prosjekt\\Prosjekt - gitlab\\snake-java\\SnakeStats.txt", String.valueOf(snakegame.getFile()));
+        assertNotNull(snakegame.getStatsFromFile());
+    }
 }
