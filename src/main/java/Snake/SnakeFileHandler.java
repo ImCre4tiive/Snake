@@ -1,8 +1,6 @@
 package Snake;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -45,19 +43,11 @@ public class SnakeFileHandler implements WriteAndReadToFile{
         }
         catch (IOException IOe) {
             System.out.println("Dette skjedde: " + IOe.getMessage());
-            try {
-                file.createNewFile();
-            } catch (Exception e) {
-                System.out.println("Dette skjedde: " + e.getMessage());
-            }
-            // System.out.println("Readfromfile: " + e.toString());
-            
         }
     }
 
     @Override
     public void WriteToFile(File file, List<String> data) {
-
         try (FileWriter filewriter = new FileWriter(file, false)) {
             
             for (String string : data) {
@@ -66,7 +56,6 @@ public class SnakeFileHandler implements WriteAndReadToFile{
         }
         catch (IOException IOe) {
             System.out.println("Dette skjedde: " + IOe.getMessage());
-            // System.out.println("WriteToFile: " + IOe);
         }  
     }
     

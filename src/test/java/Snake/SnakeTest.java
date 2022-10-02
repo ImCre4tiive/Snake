@@ -7,10 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.*;
 
-import Snake.Apple;
-import Snake.BodyPart;
-import Snake.Snake;
-
 public class SnakeTest {
     
     private Snake snake;

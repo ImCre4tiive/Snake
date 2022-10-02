@@ -1,6 +1,10 @@
-Jan Thomas,21
-Audun,21
-peder,17
-o,17
-Jens,2
-Jensern,2
+Oliver,28
+Jensern,26
+Kåre,24
+Jens,22
+Jens M,12
+Peder,10
+Magnus,9
+Nikolai,7
+t,7
+Ola,3

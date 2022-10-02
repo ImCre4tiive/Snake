@@ -8,12 +8,11 @@ import java.util.Set;
 import javafx.scene.input.KeyEvent;
 
 public class Snake {
+    private String playername;
     private String direction_of_head = "RIGHT";
     private List<BodyPart> snake_body = new ArrayList<>();
     private Apple apple = new Apple();
     private int score = 0;
-    private String playername;
-
 
     public void generate_snake() {
         for (int i = 0; i < 7; i++) {
@@ -123,7 +122,7 @@ public class Snake {
         for (BodyPart bodypart : snake_body) {
             directions_of_bodyparts_before_change.add(bodypart.getDirection());
         }
-
+        //Hver bodypart "arver" retningen til den en plass før
         for (int i = 1; i < snake_body.size(); i++) {
             if (!directions_of_bodyparts_before_change.get(i).equals(directions_of_bodyparts_before_change.get(i-1))) {
                 getBodyPart(i).setDirection(directions_of_bodyparts_before_change.get(i-1));
@@ -234,7 +233,6 @@ public class Snake {
             bodypart.setToString(toString);
         }
     }
-
 }
 
 

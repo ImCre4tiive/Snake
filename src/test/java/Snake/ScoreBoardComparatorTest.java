@@ -8,11 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-
 
 public class ScoreBoardComparatorTest {
     
@@ -26,7 +21,6 @@ public class ScoreBoardComparatorTest {
     @Test
     public void testComparator() {
         Collections.sort(testdata, new ScoreboardComparator());
-        System.out.println(testdata);
         assertEquals("[Hans,10, Ola,6, Kåre,3]", String.valueOf(testdata));
         
     }

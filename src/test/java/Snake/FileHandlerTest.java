@@ -6,9 +6,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,7 +21,6 @@ public class FileHandlerTest {
     private SnakeFileHandler filehandler = new SnakeFileHandler();
     private SnakeGame snakegame = new SnakeGame();
 
-    
     @BeforeAll
     public void setup() {
         try (FileWriter filewriter = new FileWriter(snakegame.getFile("test_stats"), false)) {
@@ -35,7 +31,6 @@ public class FileHandlerTest {
         }
         catch (IOException IOe) {
             System.out.println("Dette skjedde: " + IOe.getMessage());
-            // System.out.println("WriteToFile: " + IOe);
         }  
     }
 

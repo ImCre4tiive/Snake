@@ -81,7 +81,7 @@ public class BodyPart {
             return direction;
         }
         else {
-            return "Her ble det noe surr";
+            return "Ingen gjeldende toString!";
         }
     }
 

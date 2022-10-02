@@ -44,7 +44,6 @@ public class SnakeController {
     @FXML private Button quitgame;
     @FXML private Button pausegame;
     
-    
     private SnakeGame snakegame;
     private Snake snake;
     private Apple apple;
@@ -54,12 +53,11 @@ public class SnakeController {
     private boolean first_startup = true;
     private boolean existing_name = false;
     private boolean name_field_passed = false;
-    // private boolean GameStopped = false;
-    // private boolean GamePaused = false;
     private String playername;  
     private List<String> stats_from_file = new ArrayList<>();
     private List<Pane> bodypanes = new ArrayList<>();
     private ScoreBoardHandler scoreboardhandler = new ScoreBoardHandler();
+    private int delay = 0;
     
 
     @FXML
@@ -79,7 +77,6 @@ public class SnakeController {
 
         try {
             if (startup_approved == false) {
-                // filehandler.ReadFromFile(file, stats_from_file, playername, snakegame.getHighScore());
                 show_stats();
                 if (name_field_passed == false) {
                     if (ShowNameInputField() == false) {
@@ -118,26 +115,36 @@ public class SnakeController {
         snake.generate_snake();
         snake.generateApple();
         this.apple = snake.getApple();
-        draw_snake(snake);
-        draw_apple(apple);
+        drawgame();
         show_stats();
     }
 
 
+
+
     public void start_loop() {
+        
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
 
             @Override
             public void run() {
-                snake.move();
+                if (snakegame.getGamePaused() == true) {
+
+                } 
+                if (delay == 0) {
+                    snake.move();
+                }
+                if (delay > 0) {
+                    delay -= 1;
+                }
+                
                 
                 Platform.runLater(new Runnable() {
                     @Override public void run() {
                         try {
                             if (snakegame.getGameStopped() == false && snakegame.getGamePaused() == false) {
                                 drawgame();
-
                                 String gamestatus = snakegame.update();
                                 if (gamestatus.equals("RESTART")) {
                                     timer.cancel();
@@ -145,11 +152,14 @@ public class SnakeController {
                                     start_loop();
                                 }
                                 else if (gamestatus.equals("APPLEEATEN")) {
+                                    draw_snake(snake);
                                     timer.cancel();
                                     show_stats();
                                     scoreboardhandler.UpdateScoreBoard(scoreboard, stats_from_file, playername, snakegame);
                                     snakegame.getFilehandler().WriteToFile(file, stats_from_file);
                                     start_loop();
+                                    delay += 1;
+                                    
                                 }
                                 else if (gamestatus.equals("COLLISION")) {
                                     timer.cancel();
@@ -160,6 +170,7 @@ public class SnakeController {
                             else if (snakegame.getGamePaused() == true) {
                                 ShowPauseMenu();
                                 timer.cancel();
+                                delay += 1;
                             }
                             
                             else {
@@ -174,7 +185,6 @@ public class SnakeController {
                             timer.cancel();
                             start_loop();
                         }
-                        
                     }
                 });
                 }
@@ -182,10 +192,11 @@ public class SnakeController {
         timer.scheduleAtFixedRate(task, 0, snakegame.getLoopdelay());
     }
 
-    public void drawgame() {
+    private void drawgame() {
         draw_snake(snake);
         draw_apple(apple);
     }
+
     //==============================================================================================================================================================================
     //Menyer og overlay
     @FXML
@@ -288,6 +299,8 @@ public class SnakeController {
         errortext.setVisible(true);
     }
 
+//==============================================================================================================================================================================
+
     @FXML 
     private boolean ShowNameInputField() {
         TextInputDialog popup = new TextInputDialog();
@@ -362,7 +375,7 @@ public class SnakeController {
         highscore.setText("Highscore: " + String.valueOf(snakegame.getHighScore()));
         score.setText("Score: " + String.valueOf(snake.getScore()));
         length.setText("Length: " + String.valueOf(snake.getSnake_body().size()));
-        if (snakegame.getSpeedvalue() >= 11) {
+        if (snakegame.getSpeedvalue() >= 15) {
             speed.setText("MAX SPEED!");
         }
         else {
@@ -393,9 +406,9 @@ public class SnakeController {
                 }
                 if (snakegame.getGamePaused() == false) {
                     snake.handleInput(event);
+                    drawgame();
                 }
-                draw_snake(snake);
-                draw_apple(apple);
+                
             } catch (IllegalArgumentException e) {
                 initialize();        
             }
@@ -409,10 +422,6 @@ public class SnakeController {
             }
         }
         return false;
-    }
-
-    public ScoreBoardHandler getScoreBoardHandler() {
-        return scoreboardhandler;
     }
 
     public String getPlayerName() {

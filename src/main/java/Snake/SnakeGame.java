@@ -25,10 +25,6 @@ public class SnakeGame {
     public SnakeGame() {
     }
 
-    public void setController(SnakeController controller) {
-        this.controller = controller;
-    }
-
     public void generateSnakeAndApple() {
         snake = new Snake();
         apple = snake.getApple();
@@ -54,8 +50,7 @@ public class SnakeGame {
                     snake.IncreaseLengthOfSnake();
                     snake.IncreaseScore();
                     updateHighScore();
-                    // filehandler.WriteToFile(file, stats_from_file);
-                    if ((snake.getScore() % 2) == 0 && loopdelay >= 30) {
+                    if ((snake.getScore() % 2) == 0 && loopdelay >= 15) {
                         speedvalue += 1;
                         loopdelay -= 4;
                         
@@ -101,16 +96,6 @@ public class SnakeGame {
         controller.setApple(apple);
         this.apple = apple;
     }
-
-    // public void UpdateGameStopped(boolean GameStopped) {
-    //     controller.setGameStopped(GameStopped);
-    //     this.GameStopped = GameStopped;
-    // }
-
-    // public void UpdateGamePaused(boolean GamePaused) {
-    //     controller.setGamePaused(GamePaused);
-    //     this.GamePaused = GamePaused;
-    // }
 
     public Snake getSnake() {
         return snake;
@@ -163,6 +148,4 @@ public class SnakeGame {
     public File getFile() {
         return file;
     }
-
-
 }
